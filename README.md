@@ -18,9 +18,9 @@ Do check out their channels and websites for more informative and exciting Machi
 
 ---
 
+
 ## Demo
 
-<!-- ![Short Demo Video](https://j.gifs.com/qQQ9Jy.gif) -->
-![Short Demo Video](https://j.gifs.com/qQQ9Jy.gif)
+![Short Demo](https://github.com/Outsiders17711/streamlit-Mediapipe-WebApp/blob/main/demo/streamlitMediapipe.gif?raw=true)
 
 <hr>
