@@ -18,10 +18,9 @@ Do check out their channels and websites for more informative and exciting Machi
 
 ---
 
-## Demo Video
+## Demo
 
-<video controls="false" allowfullscreen="true" poster="streamlitMediapipe-demo.jpg" width="640" height="480">
-  <source src="streamlitMediapipe-demo-2.mp4" type="video/mp4">
-</video>
+<!-- ![Short Demo Video](https://j.gifs.com/qQQ9Jy.gif) -->
+![Short Demo Video](https://j.gifs.com/qQQ9Jy.gif)
 
 <hr>
