@@ -16,4 +16,12 @@ This web app was inspired by the awesome YouTube tutorials created by:
 
 Do check out their channels and websites for more informative and exciting Machine Learning & Computer Vision tutorials.
 
+---
+
+## Demo Video
+
+<video controls="false" allowfullscreen="true" poster="streamlitMediapipe-demo.jpg" width="640" height="480">
+  <source src="streamlitMediapipe-demo-2.mp4" type="video/mp4">
+</video>
+
 <hr>
