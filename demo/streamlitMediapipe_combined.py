@@ -438,7 +438,7 @@ class faceMeshDetector:
 
 # [start] [defaults] ________________________________________________
 # local
-dataPath = r"H:\0ut51d3r5.17711\Google Drive\_hlu.Projects\_hlu.py\_streamlitMediapipeWebApp\data"
+dataPath = r"data"
 demoImages = ["reshot01.jpg", "reshot02.jpg", "reshot03.jpg", "reshot04.jpg"]
 demoVideos = ["pexels03.mp4", "pexels04.mp4", "pexels05.mp4", "pexels08.mp4"]
 demoWebCam = "webcam_image.png"
@@ -584,7 +584,7 @@ def read_source_media(data_source_selection):
             )
 
             st.sidebar.markdown("")
-            cols = st.sidebar.beta_columns([2, 1])
+            cols = st.sidebar.columns([2, 1])
             cols[0].text("Original Image")
             st.sidebar.image(mask, use_column_width=True)
             if cols[1].button("Clear Upload"):
@@ -599,7 +599,7 @@ def read_source_media(data_source_selection):
         img = open_img_path_url(_fs.current_image_path, "path")
 
         st.sidebar.markdown("")
-        cols = st.sidebar.beta_columns([2, 1])
+        cols = st.sidebar.columns([2, 1])
         cols[0].text("Original Image")
         st.sidebar.image(img, use_column_width=True)
         if cols[1].button("Change Image"):
@@ -613,7 +613,7 @@ def read_source_media(data_source_selection):
         img = open_img_path_url(_fs.current_image_url, "url")
 
         st.sidebar.markdown("")
-        cols = st.sidebar.beta_columns([2, 1])
+        cols = st.sidebar.columns([2, 1])
         cols[0].text("Original Image")
         st.sidebar.image(img, use_column_width=True)
         if cols[1].button("Change Image"):
@@ -638,7 +638,7 @@ def read_source_media(data_source_selection):
             vid = open_vid_path_url(_fs.current_video_upload, "path")
 
             st.sidebar.markdown("")
-            cols = st.sidebar.beta_columns([2, 1])
+            cols = st.sidebar.columns([2, 1])
             cols[0].text("Original Video")
             st.sidebar.video(_fs.current_video_upload)
             if cols[1].button("Clear Upload"):
@@ -653,7 +653,7 @@ def read_source_media(data_source_selection):
         vid, vid_preview = open_vid_path_url(_fs.current_video_path, "path", preview=True)
 
         st.sidebar.markdown("")
-        cols = st.sidebar.beta_columns([2, 1])
+        cols = st.sidebar.columns([2, 1])
         cols[0].text("Original Video")
         st.sidebar.video(vid_preview)
         if cols[1].button("Change Video"):
@@ -667,7 +667,7 @@ def read_source_media(data_source_selection):
         vid, vid_preview = open_vid_path_url(_fs.current_video_url, "url", preview=True)
 
         st.sidebar.markdown("")
-        cols = st.sidebar.beta_columns([2, 1])
+        cols = st.sidebar.columns([2, 1])
         cols[0].text("Original Video")
         st.sidebar.video(vid_preview)
         if cols[1].button("Change Video"):
@@ -692,7 +692,7 @@ def read_source_media(data_source_selection):
 
 def init_module(media, type, detector, placeholders):
     frame_count = 0
-    cols = placeholders[0].beta_columns([2, 2, 1, 1])
+    cols = placeholders[0].columns([2, 2, 1, 1])
 
     if type == "image":
         img = detector.findFeatures(media)
@@ -759,7 +759,7 @@ def run_selected_module(module_selection, media, type, ph_variables):
             _fs.num_hands = new_value
             st.experimental_rerun()
 
-        with moreInfo2.beta_expander(""):
+        with moreInfo2.expander(""):
             st.markdown(aboutMpHands(), unsafe_allow_html=True)
         # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
 
@@ -780,7 +780,7 @@ def run_selected_module(module_selection, media, type, ph_variables):
             _fs.smooth_lms = new_value
             st.experimental_rerun()
 
-        with moreInfo2.beta_expander(""):
+        with moreInfo2.expander(""):
             st.markdown(aboutMpPose(), unsafe_allow_html=True)
         # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
 
@@ -801,7 +801,7 @@ def run_selected_module(module_selection, media, type, ph_variables):
             _fs.face_model = new_value
             st.experimental_rerun()
 
-        with moreInfo2.beta_expander(""):
+        with moreInfo2.expander(""):
             st.markdown(aboutMpFaceDetection(), unsafe_allow_html=True)
         # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
 
@@ -822,7 +822,7 @@ def run_selected_module(module_selection, media, type, ph_variables):
             _fs.num_faces = new_value
             st.experimental_rerun()
 
-        with moreInfo2.beta_expander(""):
+        with moreInfo2.expander(""):
             st.markdown(aboutMpFaceMesh(), unsafe_allow_html=True)
         # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
 
@@ -925,7 +925,7 @@ elif webapp.current_page == "About Web App":
         open_img_path_url("mediapipe_solutions.jpg", "path"), use_column_width="auto"
     )
 
-    vid1, vid2 = st.beta_columns([1, 1])
+    vid1, vid2 = st.columns([1, 1])
     vid1.video("https://www.youtube.com/watch?v=01sAkU_NvOY")
     vid1.caption("Advanced Computer Vision with Python - Full Course")
     vid2.video("https://www.youtube.com/watch?v=wyWmWaXapmI")
@@ -938,7 +938,7 @@ elif webapp.current_page == "About Web App":
 elif webapp.current_page == "Mediapipe Modules":
     st.set_option("deprecation.showfileUploaderEncoding", False)
 
-    mp_selectors = st.sidebar.beta_columns([1, 1])
+    mp_selectors = st.sidebar.columns([1, 1])
 
     appModules = ["Hand Tracking", "Pose Estimation", "Face Detection", "Face Mesh"]
     module_selection = mp_selectors[0].selectbox(
@@ -971,7 +971,7 @@ elif webapp.current_page == "Mediapipe Modules":
         st.experimental_rerun()
 
     st.sidebar.markdown("")
-    ph_variables = st.sidebar.beta_columns([1, 1])
+    ph_variables = st.sidebar.columns([1, 1])
     st.sidebar.markdown("")
 
     media, type = read_source_media(webapp.data_source)

@@ -90,7 +90,7 @@ elif webapp.current_page == "About Web App":
         open_img_path_url("mediapipe_solutions.jpg", "path"), use_column_width="auto"
     )
 
-    vid1, vid2 = st.beta_columns([1, 1])
+    vid1, vid2 = st.columns([1, 1])
     vid1.video("https://www.youtube.com/watch?v=01sAkU_NvOY")
     vid1.caption("Advanced Computer Vision with Python - Full Course")
     vid2.video("https://www.youtube.com/watch?v=wyWmWaXapmI")
@@ -103,7 +103,7 @@ elif webapp.current_page == "About Web App":
 elif webapp.current_page == "Mediapipe Modules":
     st.set_option("deprecation.showfileUploaderEncoding", False)
 
-    mp_selectors = st.sidebar.beta_columns([1, 1])
+    mp_selectors = st.sidebar.columns([1, 1])
 
     appModules = ["Hand Tracking", "Pose Estimation", "Face Detection", "Face Mesh"]
     module_selection = mp_selectors[0].selectbox(
@@ -136,7 +136,7 @@ elif webapp.current_page == "Mediapipe Modules":
         st.experimental_rerun()
 
     st.sidebar.markdown("")
-    ph_variables = st.sidebar.beta_columns([1, 1])
+    ph_variables = st.sidebar.columns([1, 1])
     st.sidebar.markdown("")
 
     media, type = read_source_media(webapp.data_source)
