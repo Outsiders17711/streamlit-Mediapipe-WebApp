@@ -118,9 +118,11 @@ elif webapp.current_page == "Mediapipe Modules":
 
     appDataSources = [
         "User Image",
-        "Random Image",
+        "Random Local Image",
+        "Random Online Image",
         "User Video",
-        "Random Video",
+        "Random Local Video",
+        "Random Online Video",
         "WebCam",
     ]
     data_source_selection = mp_selectors[1].selectbox(

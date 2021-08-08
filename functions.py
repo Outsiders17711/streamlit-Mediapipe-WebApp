@@ -15,10 +15,10 @@ from strings import *
 
 # [start] [defaults] ________________________________________________
 # local
-dataPath = r"H:\0ut51d3r5.17711\_hlu.Projects.Data\open-cv-murtaza-resources"
+dataPath = r"H:\0ut51d3r5.17711\Google Drive\_hlu.Projects\_hlu.py\_streamlitMediapipeWebApp\data"
 demoImages = ["reshot01.jpg", "reshot02.jpg", "reshot03.jpg", "reshot04.jpg"]
-demoVideos = ["pexels01.mp4", "pexels02.mp4", "pexels04.mp4", "pexels08.mp4"]
-demoWebCam = "webcam_image_0.png"
+demoVideos = ["pexels03.mp4", "pexels04.mp4", "pexels05.mp4", "pexels08.mp4"]
+demoWebCam = "webcam_image.png"
 # online
 urlImages = [
     "https://res.cloudinary.com/twenty20/private_images/t_standard-fit/v1521838655/photosp/0a0f136f-9032-4480-a1ca-1185dd161368/0a0f136f-9032-4480-a1ca-1185dd161368.jpg",
@@ -172,7 +172,7 @@ def read_source_media(data_source_selection):
 
             return img, "image"
 
-    elif data_source_selection == "Random Image Path":  # pass
+    elif data_source_selection == "Random Local Image":
         img = open_img_path_url(_fs.current_image_path, "path")
 
         st.sidebar.markdown("")
@@ -186,7 +186,7 @@ def read_source_media(data_source_selection):
 
         return img, "image"
 
-    elif data_source_selection == "Random Image":
+    elif data_source_selection == "Random Online Image":
         img = open_img_path_url(_fs.current_image_url, "url")
 
         st.sidebar.markdown("")
@@ -194,8 +194,8 @@ def read_source_media(data_source_selection):
         cols[0].text("Original Image")
         st.sidebar.image(img, use_column_width=True)
         if cols[1].button("Change Image"):
-            _fs.current_image_url = urlImages[_fs.idx_url_image % len(urlImages)]
             _fs.idx_url_image += 1
+            _fs.current_image_url = urlImages[_fs.idx_url_image % len(urlImages)]
             st.experimental_rerun()
         st.sidebar.markdown("---")
 
@@ -226,7 +226,7 @@ def read_source_media(data_source_selection):
 
             return vid, "video"
 
-    elif data_source_selection == "Random Video Path":  # pass
+    elif data_source_selection == "Random Local Video":
         vid, vid_preview = open_vid_path_url(_fs.current_video_path, "path", preview=True)
 
         st.sidebar.markdown("")
@@ -240,7 +240,7 @@ def read_source_media(data_source_selection):
 
         return vid, "video"
 
-    elif data_source_selection == "Random Video":
+    elif data_source_selection == "Random Online Video":
         vid, vid_preview = open_vid_path_url(_fs.current_video_url, "url", preview=True)
 
         st.sidebar.markdown("")
@@ -248,8 +248,8 @@ def read_source_media(data_source_selection):
         cols[0].text("Original Video")
         st.sidebar.video(vid_preview)
         if cols[1].button("Change Video"):
-            _fs.current_video_url = urlVideos[_fs.idx_url_video % len(urlVideos)]
             _fs.idx_url_video += 1
+            _fs.current_video_url = urlVideos[_fs.idx_url_video % len(urlVideos)]
             st.experimental_rerun()
         st.sidebar.markdown("---")
 
