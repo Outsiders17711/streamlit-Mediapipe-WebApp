@@ -2,4 +2,8 @@ mediapipe==0.8.6
 streamlit==0.86.0
 numpy==1.20.2
 opencv_contrib_python==4.4.0.46
-dataclasses==0.8
+
+# This causes the following error when deploying on streamlit:
+# ERROR: Could not find a version that satisfies the requirement dataclasses==0.8 (from versions: 0.1, 0.2, 0.3, 0.4, 0.5, 0.6)
+# FIX: As of Python 3.7, this is no longer necessary and will therefore go wrong during deployment. `dataclasses` is part of the standard library since 3.7, so remove it from your requirements.txt.
+# dataclasses==0.8; 
