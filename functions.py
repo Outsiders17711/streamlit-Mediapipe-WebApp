@@ -327,6 +327,7 @@ def run_selected_module(module_selection, media, type, ph_variables):
         "Solution Confidence [0.4-1.0]",
         min_value=0.4,
         max_value=1.0,
+        value=_fs.sol_confidence,
     )
 
     if module_selection == "Hand Tracking":
@@ -334,7 +335,7 @@ def run_selected_module(module_selection, media, type, ph_variables):
             "*Click below for information on the Mediapipe **Hands** solution...*"
         )
         new_value = ph_variables[1].number_input(
-            "Number Of Hands [1-6]", min_value=1, max_value=6
+            "Number Of Hands [1-6]", min_value=1, max_value=6, value=_fs.num_hands
         )
         if new_value != _fs.num_hands:
             _fs.num_hands = new_value
@@ -355,7 +356,7 @@ def run_selected_module(module_selection, media, type, ph_variables):
             "*Click below for information on the Mediapipe **Pose** solution...*"
         )
         new_value = ph_variables[1].number_input(
-            "Smooth Landmarks [0/1]", min_value=0, max_value=1
+            "Smooth Landmarks [0/1]", min_value=0, max_value=1, value=_fs.smooth_lms
         )
         if new_value != _fs.smooth_lms:
             _fs.smooth_lms = new_value
@@ -376,7 +377,7 @@ def run_selected_module(module_selection, media, type, ph_variables):
             "*Click below for information on the Mediapipe **Face Detection** solution...*"
         )
         new_value = ph_variables[1].number_input(
-            "Model Selection [0/1]", min_value=0, max_value=1
+            "Model Selection [0/1]", min_value=0, max_value=1, value=_fs.face_model
         )
         if new_value != _fs.face_model:
             _fs.face_model = new_value
@@ -397,7 +398,7 @@ def run_selected_module(module_selection, media, type, ph_variables):
             "*Click below for information on the Mediapipe **Face Mesh** solution...*"
         )
         new_value = ph_variables[1].number_input(
-            "Number Of Faces [1-5]", min_value=1, max_value=5
+            "Number Of Faces [1-5]", min_value=1, max_value=5, value=_fs.num_faces
         )
         if new_value != _fs.num_faces:
             _fs.num_faces = new_value
