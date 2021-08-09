@@ -1,4 +1,4 @@
-## streamlit-Mediapipe-WebApp
+## Streamlit Mediapipe WebApp
 
 This application explores the functionality of some of Google's <a href="https://google.github.io/mediapipe/" style="text-decoration: none;">**Mediapipe**</a> Machine Learning solutions, viz:
 
@@ -20,6 +20,8 @@ Do check out their channels and websites for more informative and exciting Machi
 
 
 ## Demo
+
+The app was been deployed on Streamlit. You can check it out **[here](https://share.streamlit.io/outsiders17711/streamlit-mediapipe-webapp/main/streamlitMediapipe.py)**. Note that video input sources lag on Mediapipe model inference.
 
 ![Short Demo](https://github.com/Outsiders17711/streamlit-Mediapipe-WebApp/blob/main/demo/streamlitMediapipe.gif?raw=true)
 
