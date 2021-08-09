@@ -73,6 +73,7 @@ class functionsState:
     current_image_upload: str = ""
     current_video_upload: str = ""
     uploader_key: int = 0
+    webcam_device_id: int = 0
 
 
 @st.cache(allow_output_mutation=True)
@@ -136,8 +137,8 @@ def open_vid_path_url(url_or_file, source_type, source_path=None, preview=False)
         return vid
 
 
-def open_webcam():
-    vid = cv.VideoCapture(0)
+def open_webcam(device_id):
+    vid = cv.VideoCapture(device_id)
     vid.set(3, 1280)  # width
     vid.set(4, 720)  # height
 
@@ -148,7 +149,7 @@ def read_source_media(data_source_selection):
     if data_source_selection == "User Image":
         temp_file = tempfile.NamedTemporaryFile(delete=False)
         img_file_buffer = st.sidebar.file_uploader(
-            "Upload Image", type=["jpg", "jpeg", "png"], key=_fs.uploader_key
+            "Upload Image", type=["jpg", "jpeg", "png"], key=str(_fs.uploader_key)
         )
 
         if img_file_buffer:
@@ -204,7 +205,9 @@ def read_source_media(data_source_selection):
     elif data_source_selection == "User Video":
         temp_file = tempfile.NamedTemporaryFile(delete=False)
         vid_file_buffer = st.sidebar.file_uploader(
-            "Upload Video", type=["mp4", "mov", "avi", "3gp", "m4v"], key=_fs.uploader_key
+            "Upload Video",
+            type=["mp4", "mov", "avi", "3gp", "m4v"],
+            key=str(_fs.uploader_key),
         )
 
         if vid_file_buffer:
@@ -256,10 +259,14 @@ def read_source_media(data_source_selection):
         return vid, "video"
 
     elif data_source_selection == "WebCam":
-        vid = open_webcam()
+        vid = open_webcam(_fs.webcam_device_id)
 
-        st.sidebar.text("WebCam")
+        cols = st.sidebar.columns([2, 1])
+        cols[0].markdown(f"**Webcam**: _Device ID = {_fs.webcam_device_id}_")
         st.sidebar.image(open_img_path_url(demoWebCam, "path"))
+        if cols[1].button(f"Switch Device"):
+            _fs.webcam_device_id = 0 if _fs.webcam_device_id == 1 else 1
+            st.experimental_rerun()
         st.sidebar.markdown("---")
 
         return vid, "webcam"
@@ -279,7 +286,7 @@ def init_module(media, type, detector, placeholders):
         stop_clicked = cols[0].button("🟥 STOP")
         start_clicked = cols[3].button("🟢 START")
 
-        while True:
+        while media.isOpened():
             try:
                 success, img = media.read()
                 frame_count += 1
@@ -299,7 +306,6 @@ def init_module(media, type, detector, placeholders):
                 if stop_clicked:
                     placeholders[1].empty()
                     media.release()
-                    cv.destroyAllWindows()
                     break
 
                 if start_clicked:
@@ -308,7 +314,6 @@ def init_module(media, type, detector, placeholders):
             except Exception:
                 placeholders[1].info(traceback.format_exc())
                 media.release()
-                cv.destroyAllWindows()
                 break
 
 
