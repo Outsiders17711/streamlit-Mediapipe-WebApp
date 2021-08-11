@@ -24,7 +24,7 @@ Do check out their channels and websites for more informative and exciting Machi
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io/outsiders17711/streamlit-mediapipe-webapp/main/streamlitMediapipe.py)
 
 
-The app was been deployed on Streamlit. You can check it out **[here](https://share.streamlit.io/outsiders17711/streamlit-mediapipe-webapp/main/streamlitMediapipe.py)**. Note that video input sources lag on Mediapipe model inference.
+The app was been deployed on Streamlit. You can check it out **[here](https://share.streamlit.io/outsiders17711/streamlit-mediapipe-webapp/main/streamlitMediapipe.py)**. Note that video input sources lag while running on Streamlit.
 
 ![Short Demo](https://github.com/Outsiders17711/streamlit-Mediapipe-WebApp/blob/main/demo/streamlitMediapipe.gif?raw=true)
 
