@@ -1,6 +1,8 @@
 import dataclasses
 
 import streamlit as st
+import streamlit.report_thread as ReportThread
+from streamlit.server.server import Server
 
 from functions import *
 
@@ -26,7 +28,14 @@ class webappState:
 
 @st.cache(allow_output_mutation=True)
 def _webappState() -> webappState:
-    return webappState()
+    session_id = ReportThread.get_report_ctx().session_id
+    session = Server.get_current()._session_info_by_id[session_id].session
+
+    if not hasattr(session, "_currentappState"):
+        setattr(session, "_currentappState", webappState())
+
+    return session._currentappState
+    # return webappState()
 
 
 webapp = _webappState()
@@ -80,7 +89,7 @@ if webapp.current_page == "About Me":
     st.sidebar.markdown("---")
 
     # garbage collection test
-    del (appPages, page_selection)
+    # del (appPages, page_selection)
     gc.collect()
 
 elif webapp.current_page == "About Web App":
@@ -108,7 +117,7 @@ elif webapp.current_page == "About Web App":
     st.markdown(aboutWebApp()[1], unsafe_allow_html=True)
 
     # garbage collection test
-    del (appPages, page_selection, vid1, vid2)
+    # del (appPages, page_selection, vid1, vid2)
     gc.collect()
 
 elif webapp.current_page == "Mediapipe Modules":
@@ -154,17 +163,17 @@ elif webapp.current_page == "Mediapipe Modules":
     run_selected_module(webapp.current_module, media, type, ph_variables)
 
     # garbage collection test
-    del (
-        appPages,
-        page_selection,
-        mp_selectors,
-        appModules,
-        module_selection,
-        appDataSources,
-        data_source_selection,
-        ph_variables,
-        media,
-        type,
-    )
+    # del (
+    #     appPages,
+    #     page_selection,
+    #     mp_selectors,
+    #     appModules,
+    #     module_selection,
+    #     appDataSources,
+    #     data_source_selection,
+    #     ph_variables,
+    #     media,
+    #     type,
+    # )
     gc.collect()
     # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
