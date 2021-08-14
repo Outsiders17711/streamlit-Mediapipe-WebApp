@@ -4,6 +4,9 @@ import streamlit as st
 
 from functions import *
 
+import gc  # garbage collection test
+
+gc.enable()  # garbage collection test
 
 # [start] [persistent states]__________________________________________
 @dataclasses.dataclass
@@ -76,6 +79,10 @@ if webapp.current_page == "About Me":
     st.sidebar.image(open_img_path_url("highlord.jpg", "path"), use_column_width="auto")
     st.sidebar.markdown("---")
 
+    # garbage collection test
+    del (appPages, page_selection)
+    gc.collect()
+
 elif webapp.current_page == "About Web App":
     st.markdown(aboutWebApp()[0], unsafe_allow_html=True)
 
@@ -99,6 +106,10 @@ elif webapp.current_page == "About Web App":
     )
 
     st.markdown(aboutWebApp()[1], unsafe_allow_html=True)
+
+    # garbage collection test
+    del (appPages, page_selection, vid1, vid2)
+    gc.collect()
 
 elif webapp.current_page == "Mediapipe Modules":
     st.set_option("deprecation.showfileUploaderEncoding", False)
@@ -142,4 +153,18 @@ elif webapp.current_page == "Mediapipe Modules":
     media, type = read_source_media(webapp.data_source)
     run_selected_module(webapp.current_module, media, type, ph_variables)
 
+    # garbage collection test
+    del (
+        appPages,
+        page_selection,
+        mp_selectors,
+        appModules,
+        module_selection,
+        appDataSources,
+        data_source_selection,
+        ph_variables,
+        media,
+        type,
+    )
+    gc.collect()
     # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]

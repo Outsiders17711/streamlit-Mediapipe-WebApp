@@ -1,5 +1,6 @@
 import streamlit as st
 
+
 pageConfig = """
         <style>
         [data-testid="stSidebar"][aria-expanded="true"] > div:first-child{
@@ -11,13 +12,13 @@ pageConfig = """
         }
         </style>
         """
-# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
 
 nbsp = "&nbsp"
-# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]\
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
 
 
-@st.cache()
+# @st.cache() # garbage collection test
 def aboutMe():
     return """
         ## **Hi 👋 I'm Umar...**
@@ -52,7 +53,7 @@ def aboutMe():
         """
 
 
-@st.cache()
+# @st.cache() # garbage collection test
 def aboutWebApp():
     return (
         """
@@ -80,7 +81,7 @@ def aboutWebApp():
     )
 
 
-@st.cache()
+# @st.cache() # garbage collection test
 def aboutMpHands():
     return """
     <style>
@@ -120,7 +121,7 @@ def aboutMpHands():
     """
 
 
-@st.cache()
+# @st.cache() # garbage collection test
 def aboutMpPose():
     return """
     <style>
@@ -160,7 +161,7 @@ def aboutMpPose():
     """
 
 
-@st.cache()
+# @st.cache() # garbage collection test
 def aboutMpFaceDetection():
     return """
     <style>
@@ -193,7 +194,7 @@ def aboutMpFaceDetection():
     """
 
 
-@st.cache()
+# @st.cache() # garbage collection test
 def aboutMpFaceMesh():
     return """
     <style>
@@ -223,3 +224,6 @@ def aboutMpFaceMesh():
     </div>
     
     """
+
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]

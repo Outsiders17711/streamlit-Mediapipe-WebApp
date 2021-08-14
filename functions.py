@@ -12,6 +12,10 @@ import streamlit as st
 from modules import *
 from strings import *
 
+import gc  # garbage collection test
+
+gc.enable()
+
 
 # [start] [defaults] ________________________________________________
 # local
@@ -171,6 +175,8 @@ def read_source_media(data_source_selection):
                 st.experimental_rerun()
             st.sidebar.markdown("---")
 
+            del temp_file, img_file_buffer, mask, cols  # garbage collection test
+
             return img, "image"
 
     elif data_source_selection == "Random Local Image":
@@ -184,6 +190,8 @@ def read_source_media(data_source_selection):
             _fs.current_image_path = random.choice(demoImages)
             st.experimental_rerun()
         st.sidebar.markdown("---")
+
+        del cols  # garbage collection test
 
         return img, "image"
 
@@ -199,6 +207,8 @@ def read_source_media(data_source_selection):
             _fs.current_image_url = urlImages[_fs.idx_url_image % len(urlImages)]
             st.experimental_rerun()
         st.sidebar.markdown("---")
+
+        del cols  # garbage collection test
 
         return img, "image"
 
@@ -227,6 +237,8 @@ def read_source_media(data_source_selection):
                 st.experimental_rerun()
             st.sidebar.markdown("---")
 
+            del temp_file, vid_file_buffer, cols  # garbage collection test
+
             return vid, "video"
 
     elif data_source_selection == "Random Local Video":
@@ -240,6 +252,8 @@ def read_source_media(data_source_selection):
             _fs.current_video_path = random.choice(demoVideos)
             st.experimental_rerun()
         st.sidebar.markdown("---")
+
+        del vid_preview, cols  # garbage collection test
 
         return vid, "video"
 
@@ -256,6 +270,8 @@ def read_source_media(data_source_selection):
             st.experimental_rerun()
         st.sidebar.markdown("---")
 
+        del vid_preview, cols  # garbage collection test
+
         return vid, "video"
 
     elif data_source_selection == "WebCam":
@@ -269,6 +285,8 @@ def read_source_media(data_source_selection):
             st.experimental_rerun()
         st.sidebar.markdown("---")
 
+        del cols  # garbage collection test
+
         return vid, "webcam"
 
     return None, None  # final fallback
@@ -281,6 +299,8 @@ def init_module(media, type, detector, placeholders):
     if type == "image":
         img = detector.findFeatures(media)
         placeholders[1].image(img, use_column_width=True)
+
+        del img  # garbage collection test
 
     if type in ["video", "webcam"]:
         stop_clicked = cols[0].button("🟥 STOP")
@@ -302,6 +322,8 @@ def init_module(media, type, detector, placeholders):
                 img = detector.findFeatures(img)
 
                 placeholders[1].image(img, use_column_width=True)
+
+                del img  # garbage collection test
 
                 if stop_clicked:
                     placeholders[1].empty()
@@ -413,3 +435,17 @@ def run_selected_module(module_selection, media, type, ph_variables):
         )
         init_module(media, type, detector, (moduleOutput1, moduleOutput2))
         # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
+
+    # garbage collection test
+    del (
+        module_selection,
+        media,
+        type,
+        ph_variables,
+        moreInfo1,
+        moreInfo2,
+        moduleOutput1,
+        moduleOutput2,
+        detector,
+    )
+    gc.collect()
