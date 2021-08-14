@@ -12,7 +12,7 @@ from modules import *
 from strings import *
 
 
-import gc  # garbage collection test
+import gc  # garbage collection
 
 gc.enable()
 
@@ -128,7 +128,7 @@ def init_module(media, type, detector, placeholders):
         img = detector.findFeatures(media)
         placeholders[1].image(img, use_column_width=True)
 
-        del img  # garbage collection test
+        del img  # garbage collection
 
     if type in ["video", "webcam"]:
         stop_clicked = cols[0].button("🟥 STOP")
@@ -151,7 +151,7 @@ def init_module(media, type, detector, placeholders):
 
                 placeholders[1].image(img, use_column_width=True)
 
-                del img  # garbage collection test
+                del img  # garbage collection
 
                 if stop_clicked:
                     placeholders[1].empty()
@@ -265,7 +265,7 @@ def run_selected_module(_fs, media, type, ph_variables):
         init_module(media, type, detector, (moduleOutput1, moduleOutput2))
         # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
 
-    # garbage collection test
+    # garbage collection
     del (
         media,
         type,
@@ -276,7 +276,6 @@ def run_selected_module(_fs, media, type, ph_variables):
         moduleOutput2,
         detector,
     )
-    gc.collect()
 
 
 def read_source_media(_fs, ph_variables):
@@ -312,7 +311,7 @@ def read_source_media(_fs, ph_variables):
                 st.experimental_rerun()
             st.sidebar.markdown("---")
 
-            del temp_file, img_file_buffer, mask, cols  # garbage collection test
+            del temp_file, img_file_buffer, mask, cols  # garbage collection
 
             run_selected_module(_fs, img, "image", ph_variables)
 
@@ -328,7 +327,7 @@ def read_source_media(_fs, ph_variables):
             st.experimental_rerun()
         st.sidebar.markdown("---")
 
-        del cols  # garbage collection test
+        del cols  # garbage collection
 
         run_selected_module(_fs, img, "image", ph_variables)
 
@@ -345,7 +344,7 @@ def read_source_media(_fs, ph_variables):
             st.experimental_rerun()
         st.sidebar.markdown("---")
 
-        del cols  # garbage collection test
+        del cols  # garbage collection
 
         run_selected_module(_fs, img, "image", ph_variables)
 
@@ -374,7 +373,7 @@ def read_source_media(_fs, ph_variables):
                 st.experimental_rerun()
             st.sidebar.markdown("---")
 
-            del temp_file, vid_file_buffer, cols  # garbage collection test
+            del temp_file, vid_file_buffer, cols  # garbage collection
 
             run_selected_module(_fs, vid, "video", ph_variables)
 
@@ -390,7 +389,7 @@ def read_source_media(_fs, ph_variables):
             st.experimental_rerun()
         st.sidebar.markdown("---")
 
-        del vid_preview, cols  # garbage collection test
+        del vid_preview, cols  # garbage collection
 
         run_selected_module(_fs, vid, "video", ph_variables)
 
@@ -407,7 +406,7 @@ def read_source_media(_fs, ph_variables):
             st.experimental_rerun()
         st.sidebar.markdown("---")
 
-        del vid_preview, cols  # garbage collection test
+        del vid_preview, cols  # garbage collection
 
         run_selected_module(_fs, vid, "video", ph_variables)
 
@@ -422,7 +421,7 @@ def read_source_media(_fs, ph_variables):
             st.experimental_rerun()
         st.sidebar.markdown("---")
 
-        del cols  # garbage collection test
+        del cols  # garbage collection
 
         run_selected_module(_fs, vid, "webcam", ph_variables)
 
@@ -456,4 +455,3 @@ def read_source_media(_fs, ph_variables):
 
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
-gc.collect()

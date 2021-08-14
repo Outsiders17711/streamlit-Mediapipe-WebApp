@@ -1,19 +1,18 @@
+import gc  # garbage collection
+
 import streamlit as st
 import streamlit.report_thread as ReportThread
 from streamlit.server.server import Server
-
 from streamlit import caching
-from pynput.keyboard import Key, Controller
 
 from functions import *
 from appSessionState import getSessionState
 
-import gc  # garbage collection test
-
-gc.enable()  # garbage collection test
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
 # [start] [persistent states]__________________________________________
+gc.enable()  # garbage collection
+
 webapp = getSessionState(
     idx_current_page=1,
     current_page="About Web App",
@@ -45,14 +44,7 @@ webapp = getSessionState(
 
 def reload():
     caching.clear_cache()
-
-    keyboard = Controller()
-    keyboard.press(Key.ctrl)
-    keyboard.press("r")
-    keyboard.release("r")
-    keyboard.release(Key.ctrl)
-
-    gc.collect()  # garbage collection test
+    gc.collect()  # garbage collection
     st.experimental_rerun()
 
 
@@ -60,6 +52,8 @@ def reload():
 
 
 # [start] [setup main page and side bar] ____________________________
+st.set_page_config(page_title="Streamlit Mediapipe WebApp", layout="wide")
+
 st.markdown(
     f"""
     {pageConfig}
@@ -165,6 +159,7 @@ elif webapp.current_page == "Mediapipe Modules":
         "Random Local Video",
         "Random Online Video",
         "WebCam",
+        # "Video Sources",
     ]
     data_source_selection = mp_selectors[1].selectbox(
         "Select Media Source:",
