@@ -60,8 +60,6 @@ def reload():
 
 
 # [start] [setup main page and side bar] ____________________________
-st.set_page_config(page_title="Streamlit Mediapipe WebApp", layout="wide")
-
 st.markdown(
     f"""
     {pageConfig}
@@ -109,8 +107,6 @@ page_selection = pages_reload[0].selectbox(
 if webapp.current_page != page_selection:
     webapp.idx_current_page = appPages.index(page_selection)
     webapp.current_page = page_selection
-
-    gc.collect()  # garbage collection test
     st.experimental_rerun()
 
 if webapp.current_page == "About Me":
@@ -159,8 +155,6 @@ elif webapp.current_page == "Mediapipe Modules":
     if webapp.current_module != module_selection:
         webapp.idx_current_module = appModules.index(module_selection)
         webapp.current_module = module_selection
-
-        gc.collect()  # garbage collection test
         st.experimental_rerun()
 
     appDataSources = [
@@ -180,8 +174,6 @@ elif webapp.current_page == "Mediapipe Modules":
     if webapp.data_source != data_source_selection:
         webapp.idx_data_source = appDataSources.index(data_source_selection)
         webapp.data_source = data_source_selection
-
-        gc.collect()  # garbage collection test
         st.experimental_rerun()
 
     st.sidebar.markdown("")
@@ -192,4 +184,3 @@ elif webapp.current_page == "Mediapipe Modules":
 
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
-gc.collect()
