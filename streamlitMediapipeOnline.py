@@ -166,10 +166,7 @@ elif webapp.current_page == "Mediapipe Modules":
         "User Image",
         "Random Local Image",
         "Random Online Image",
-        "User Video",
-        "Random Local Video",
-        "Random Online Video",
-        "WebCam",
+        "Video Sources",
     ]
     data_source_selection = mp_selectors[1].selectbox(
         "Select Media Source:",

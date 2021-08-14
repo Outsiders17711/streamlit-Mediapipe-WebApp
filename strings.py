@@ -18,7 +18,7 @@ nbsp = "&nbsp"
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
 
 
-# @st.cache() # garbage collection test
+@st.cache()
 def aboutMe():
     return """
         ## **Hi 👋 I'm Umar...**
@@ -53,7 +53,7 @@ def aboutMe():
         """
 
 
-# @st.cache() # garbage collection test
+@st.cache()
 def aboutWebApp():
     return (
         """
@@ -81,7 +81,7 @@ def aboutWebApp():
     )
 
 
-# @st.cache() # garbage collection test
+@st.cache()
 def aboutMpHands():
     return """
     <style>
@@ -121,7 +121,7 @@ def aboutMpHands():
     """
 
 
-# @st.cache() # garbage collection test
+@st.cache()
 def aboutMpPose():
     return """
     <style>
@@ -161,7 +161,7 @@ def aboutMpPose():
     """
 
 
-# @st.cache() # garbage collection test
+@st.cache()
 def aboutMpFaceDetection():
     return """
     <style>
@@ -194,7 +194,7 @@ def aboutMpFaceDetection():
     """
 
 
-# @st.cache() # garbage collection test
+@st.cache()
 def aboutMpFaceMesh():
     return """
     <style>

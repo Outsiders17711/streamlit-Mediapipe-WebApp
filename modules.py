@@ -1,8 +1,26 @@
 # %%
 import cv2 as cv
 import mediapipe as mp
+import streamlit as st
+
 
 # [start]____________________________________________________________
+@st.cache()
+def mpSolutions(type):
+    if type == "hands":
+        return mp.solutions.hands, mp.solutions.drawing_utils
+    elif type == "pose":
+        return mp.solutions.pose, mp.solutions.drawing_utils
+    elif type == "face_detection":
+        return mp.solutions.face_detection, mp.solutions.drawing_utils
+    elif type == "face_mesh":
+        return mp.solutions.face_mesh, mp.solutions.drawing_utils
+
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
+
+# [start]____________________________________________________________
+@st.cache(allow_output_mutation=True)
 class handDetector:
     def __init__(self, imageMode=False, numHands=2, solutionConfidence=0.5):
         self.imageMode = imageMode
@@ -10,14 +28,15 @@ class handDetector:
         self.detectionConfidence = solutionConfidence
         self.trackingConfidence = solutionConfidence
 
-        self.mpHands = mp.solutions.hands
+        # self.mpHands = mp.solutions.hands
+        # self.mpDraw = mp.solutions.drawing_utils
+        self.mpHands, self.mpDraw = mpSolutions("hands")
         self.hands = self.mpHands.Hands(
             self.imageMode,
             self.numHands,
             self.detectionConfidence,
             self.trackingConfidence,
         )
-        self.mpDraw = mp.solutions.drawing_utils
 
     def findFeatures(self, imgRGB):
         self.results = self.hands.process(imgRGB)
@@ -40,6 +59,7 @@ class handDetector:
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
 
 # [start]____________________________________________________________
+@st.cache(allow_output_mutation=True)
 class poseDetector:
     def __init__(self, imageMode=False, smoothLandmarks=True, solutionConfidence=0.5):
         self.imageMode = imageMode
@@ -47,14 +67,15 @@ class poseDetector:
         self.detectionConfidence = solutionConfidence
         self.trackingConfidence = solutionConfidence
 
-        self.mpPose = mp.solutions.pose
+        # self.mpPose = mp.solutions.pose
+        # self.mpDraw = mp.solutions.drawing_utils
+        self.mpPose, self.mpDraw = mpSolutions("pose")
         self.pose = self.mpPose.Pose(
             self.imageMode,
             self.smoothLandmarks,
             self.detectionConfidence,
             self.trackingConfidence,
         )
-        self.mpDraw = mp.solutions.drawing_utils
 
     def findFeatures(self, imgRGB):
         self.results = self.pose.process(imgRGB)
@@ -75,16 +96,18 @@ class poseDetector:
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
 
 # [start]____________________________________________________________
+@st.cache(allow_output_mutation=True)
 class faceDetector:
     def __init__(self, solutionConfidence=0.5, modelSelection=1):
         self.detectionConfidence = solutionConfidence
         self.modelSelection = modelSelection
 
-        self.mpFace = mp.solutions.face_detection
+        # self.mpFace = mp.solutions.face_detection
+        # self.mpDraw = mp.solutions.drawing_utils
+        self.mpFace, self.mpDraw = mpSolutions("face_detection")
         self.face = self.mpFace.FaceDetection(
             self.detectionConfidence, self.modelSelection
         )
-        self.mpDraw = mp.solutions.drawing_utils
 
     def findFeatures(self, imgRGB):
         ih, iw = imgRGB.shape[:2]
@@ -142,6 +165,7 @@ class faceDetector:
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
 
 # [start]____________________________________________________________
+@st.cache(allow_output_mutation=True)
 class faceMeshDetector:
     def __init__(self, imageMode=False, numFaces=1, solutionConfidence=0.5):
         self.imageMode = imageMode
@@ -149,15 +173,15 @@ class faceMeshDetector:
         self.detectionConfidence = solutionConfidence
         self.trackingConfidence = solutionConfidence
 
-        self.mpFaceMesh = mp.solutions.face_mesh
+        # self.mpFaceMesh = mp.solutions.face_mesh
+        # self.mpDraw = mp.solutions.drawing_utils
+        self.mpFaceMesh, self.mpDraw = mpSolutions("face_mesh")
         self.faceMesh = self.mpFaceMesh.FaceMesh(
             self.imageMode,
             self.numFaces,
             self.detectionConfidence,
             self.trackingConfidence,
         )
-
-        self.mpDraw = mp.solutions.drawing_utils
         self.landmark_drawSpecs = self.mpDraw.DrawingSpec(
             thickness=1, circle_radius=1, color=(0, 251, 251)
         )

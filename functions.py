@@ -2,7 +2,6 @@ import os
 import random
 import tempfile
 import traceback
-import dataclasses
 from urllib.request import urlopen
 
 import cv2 as cv
@@ -11,6 +10,7 @@ import streamlit as st
 
 from modules import *
 from strings import *
+
 
 import gc  # garbage collection test
 
@@ -57,35 +57,6 @@ urlVideos = [
 ]
 # global parameters
 target_h, target_w = 350, 550
-
-# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
-
-# [start] [persistent states]__________________________________________
-@dataclasses.dataclass
-class functionsState:
-    current_image_path: str = demoImages[0]
-    current_image_url: str = urlImages[0]
-    idx_url_image: int = 0
-    current_video_path: str = demoVideos[0]
-    current_video_url: str = urlVideos[0]
-    idx_url_video: int = 0
-    sol_confidence: float = 0.65
-    num_hands: int = 2
-    smooth_lms: int = 1
-    face_model: int = 0
-    num_faces: int = 2
-    current_image_upload: str = ""
-    current_video_upload: str = ""
-    uploader_key: int = 0
-    webcam_device_id: int = 0
-
-
-@st.cache(allow_output_mutation=True)
-def _functionsState() -> functionsState:
-    return functionsState()
-
-
-_fs = _functionsState()
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
 
@@ -149,149 +120,6 @@ def open_webcam(device_id):
     return vid
 
 
-def read_source_media(data_source_selection):
-    if data_source_selection == "User Image":
-        temp_file = tempfile.NamedTemporaryFile(delete=False)
-        img_file_buffer = st.sidebar.file_uploader(
-            "Upload Image", type=["jpg", "jpeg", "png"], key=str(_fs.uploader_key)
-        )
-
-        if img_file_buffer:
-            temp_file.write(img_file_buffer.read())
-            _fs.current_image_upload = temp_file.name
-
-        if _fs.current_image_upload != "":
-            img, mask = open_img_path_url(
-                _fs.current_image_upload, "path", source_path="", resize=True
-            )
-
-            st.sidebar.markdown("")
-            cols = st.sidebar.columns([2, 1])
-            cols[0].text("Original Image")
-            st.sidebar.image(mask, use_column_width=True)
-            if cols[1].button("Clear Upload"):
-                _fs.current_image_upload = ""
-                _fs.uploader_key += 1
-                st.experimental_rerun()
-            st.sidebar.markdown("---")
-
-            del temp_file, img_file_buffer, mask, cols  # garbage collection test
-
-            return img, "image"
-
-    elif data_source_selection == "Random Local Image":
-        img = open_img_path_url(_fs.current_image_path, "path")
-
-        st.sidebar.markdown("")
-        cols = st.sidebar.columns([2, 1])
-        cols[0].text("Original Image")
-        st.sidebar.image(img, use_column_width=True)
-        if cols[1].button("Change Image"):
-            _fs.current_image_path = random.choice(demoImages)
-            st.experimental_rerun()
-        st.sidebar.markdown("---")
-
-        del cols  # garbage collection test
-
-        return img, "image"
-
-    elif data_source_selection == "Random Online Image":
-        img = open_img_path_url(_fs.current_image_url, "url")
-
-        st.sidebar.markdown("")
-        cols = st.sidebar.columns([2, 1])
-        cols[0].text("Original Image")
-        st.sidebar.image(img, use_column_width=True)
-        if cols[1].button("Change Image"):
-            _fs.idx_url_image += 1
-            _fs.current_image_url = urlImages[_fs.idx_url_image % len(urlImages)]
-            st.experimental_rerun()
-        st.sidebar.markdown("---")
-
-        del cols  # garbage collection test
-
-        return img, "image"
-
-    elif data_source_selection == "User Video":
-        temp_file = tempfile.NamedTemporaryFile(delete=False)
-        vid_file_buffer = st.sidebar.file_uploader(
-            "Upload Video",
-            type=["mp4", "mov", "avi", "3gp", "m4v"],
-            key=str(_fs.uploader_key),
-        )
-
-        if vid_file_buffer:
-            temp_file.write(vid_file_buffer.read())
-            _fs.current_video_upload = temp_file.name
-
-        if _fs.current_video_upload != "":
-            vid = open_vid_path_url(_fs.current_video_upload, "path")
-
-            st.sidebar.markdown("")
-            cols = st.sidebar.columns([2, 1])
-            cols[0].text("Original Video")
-            st.sidebar.video(_fs.current_video_upload)
-            if cols[1].button("Clear Upload"):
-                _fs.current_video_upload = ""
-                _fs.uploader_key += 1
-                st.experimental_rerun()
-            st.sidebar.markdown("---")
-
-            del temp_file, vid_file_buffer, cols  # garbage collection test
-
-            return vid, "video"
-
-    elif data_source_selection == "Random Local Video":
-        vid, vid_preview = open_vid_path_url(_fs.current_video_path, "path", preview=True)
-
-        st.sidebar.markdown("")
-        cols = st.sidebar.columns([2, 1])
-        cols[0].text("Original Video")
-        st.sidebar.video(vid_preview)
-        if cols[1].button("Change Video"):
-            _fs.current_video_path = random.choice(demoVideos)
-            st.experimental_rerun()
-        st.sidebar.markdown("---")
-
-        del vid_preview, cols  # garbage collection test
-
-        return vid, "video"
-
-    elif data_source_selection == "Random Online Video":
-        vid, vid_preview = open_vid_path_url(_fs.current_video_url, "url", preview=True)
-
-        st.sidebar.markdown("")
-        cols = st.sidebar.columns([2, 1])
-        cols[0].text("Original Video")
-        st.sidebar.video(vid_preview)
-        if cols[1].button("Change Video"):
-            _fs.idx_url_video += 1
-            _fs.current_video_url = urlVideos[_fs.idx_url_video % len(urlVideos)]
-            st.experimental_rerun()
-        st.sidebar.markdown("---")
-
-        del vid_preview, cols  # garbage collection test
-
-        return vid, "video"
-
-    elif data_source_selection == "WebCam":
-        vid = open_webcam(_fs.webcam_device_id)
-
-        cols = st.sidebar.columns([2, 1])
-        cols[0].markdown(f"**Webcam**: _Device ID = {_fs.webcam_device_id}_")
-        st.sidebar.image(open_img_path_url(demoWebCam, "path"))
-        if cols[1].button(f"Switch Device"):
-            _fs.webcam_device_id = 0 if _fs.webcam_device_id == 1 else 1
-            st.experimental_rerun()
-        st.sidebar.markdown("---")
-
-        del cols  # garbage collection test
-
-        return vid, "webcam"
-
-    return None, None  # final fallback
-
-
 def init_module(media, type, detector, placeholders):
     frame_count = 0
     cols = placeholders[0].columns([2, 2, 1, 1])
@@ -339,7 +167,7 @@ def init_module(media, type, detector, placeholders):
                 break
 
 
-def run_selected_module(module_selection, media, type, ph_variables):
+def run_selected_module(_fs, media, type, ph_variables):
     moreInfo1 = st.empty()
     moreInfo2 = st.empty()
     moduleOutput1 = st.empty()
@@ -352,6 +180,7 @@ def run_selected_module(module_selection, media, type, ph_variables):
         value=_fs.sol_confidence,
     )
 
+    module_selection = _fs.current_module
     if module_selection == "Hand Tracking":
         moreInfo1.markdown(
             "*Click below for information on the Mediapipe **Hands** solution...*"
@@ -438,7 +267,6 @@ def run_selected_module(module_selection, media, type, ph_variables):
 
     # garbage collection test
     del (
-        module_selection,
         media,
         type,
         ph_variables,
@@ -449,3 +277,183 @@ def run_selected_module(module_selection, media, type, ph_variables):
         detector,
     )
     gc.collect()
+
+
+def read_source_media(_fs, ph_variables):
+    if _fs.current_image_path == "":
+        _fs.current_image_path = demoImages[0]
+        _fs.current_image_url = urlImages[0]
+        _fs.current_video_path = demoVideos[0]
+        _fs.current_video_url = urlVideos[0]
+
+    data_source_selection = _fs.data_source
+    if data_source_selection == "User Image":
+        temp_file = tempfile.NamedTemporaryFile(delete=False)
+        img_file_buffer = st.sidebar.file_uploader(
+            "Upload Image", type=["jpg", "jpeg", "png"], key=f"img_ul_{_fs.uploader_key}"
+        )
+
+        if img_file_buffer:
+            temp_file.write(img_file_buffer.read())
+            _fs.current_image_upload = temp_file.name
+
+        if _fs.current_image_upload != "":
+            img, mask = open_img_path_url(
+                _fs.current_image_upload, "path", source_path="", resize=True
+            )
+
+            st.sidebar.markdown("")
+            cols = st.sidebar.columns([2, 1])
+            cols[0].text("Original Image")
+            st.sidebar.image(mask, use_column_width=True)
+            if cols[1].button("Clear Upload"):
+                _fs.current_image_upload = ""
+                _fs.uploader_key += 1
+                st.experimental_rerun()
+            st.sidebar.markdown("---")
+
+            del temp_file, img_file_buffer, mask, cols  # garbage collection test
+
+            run_selected_module(_fs, img, "image", ph_variables)
+
+    elif data_source_selection == "Random Local Image":
+        img = open_img_path_url(_fs.current_image_path, "path")
+
+        st.sidebar.markdown("")
+        cols = st.sidebar.columns([2, 1])
+        cols[0].text("Original Image")
+        st.sidebar.image(img, use_column_width=True)
+        if cols[1].button("Change Image"):
+            _fs.current_image_path = random.choice(demoImages)
+            st.experimental_rerun()
+        st.sidebar.markdown("---")
+
+        del cols  # garbage collection test
+
+        run_selected_module(_fs, img, "image", ph_variables)
+
+    elif data_source_selection == "Random Online Image":
+        img = open_img_path_url(_fs.current_image_url, "url")
+
+        st.sidebar.markdown("")
+        cols = st.sidebar.columns([2, 1])
+        cols[0].text("Original Image")
+        st.sidebar.image(img, use_column_width=True)
+        if cols[1].button("Change Image"):
+            _fs.idx_url_image += 1
+            _fs.current_image_url = urlImages[_fs.idx_url_image % len(urlImages)]
+            st.experimental_rerun()
+        st.sidebar.markdown("---")
+
+        del cols  # garbage collection test
+
+        run_selected_module(_fs, img, "image", ph_variables)
+
+    elif data_source_selection == "User Video":
+        temp_file = tempfile.NamedTemporaryFile(delete=False)
+        vid_file_buffer = st.sidebar.file_uploader(
+            "Upload Video",
+            type=["mp4", "mov", "avi", "3gp", "m4v"],
+            key=f"vid_ul_{_fs.uploader_key}",
+        )
+
+        if vid_file_buffer:
+            temp_file.write(vid_file_buffer.read())
+            _fs.current_video_upload = temp_file.name
+
+        if _fs.current_video_upload != "":
+            vid = open_vid_path_url(_fs.current_video_upload, "path")
+
+            st.sidebar.markdown("")
+            cols = st.sidebar.columns([2, 1])
+            cols[0].text("Original Video")
+            st.sidebar.video(_fs.current_video_upload)
+            if cols[1].button("Clear Upload"):
+                _fs.current_video_upload = ""
+                _fs.uploader_key += 1
+                st.experimental_rerun()
+            st.sidebar.markdown("---")
+
+            del temp_file, vid_file_buffer, cols  # garbage collection test
+
+            run_selected_module(_fs, vid, "video", ph_variables)
+
+    elif data_source_selection == "Random Local Video":
+        vid, vid_preview = open_vid_path_url(_fs.current_video_path, "path", preview=True)
+
+        st.sidebar.markdown("")
+        cols = st.sidebar.columns([2, 1])
+        cols[0].text("Original Video")
+        st.sidebar.video(vid_preview)
+        if cols[1].button("Change Video"):
+            _fs.current_video_path = random.choice(demoVideos)
+            st.experimental_rerun()
+        st.sidebar.markdown("---")
+
+        del vid_preview, cols  # garbage collection test
+
+        run_selected_module(_fs, vid, "video", ph_variables)
+
+    elif data_source_selection == "Random Online Video":
+        vid, vid_preview = open_vid_path_url(_fs.current_video_url, "url", preview=True)
+
+        st.sidebar.markdown("")
+        cols = st.sidebar.columns([2, 1])
+        cols[0].text("Original Video")
+        st.sidebar.video(vid_preview)
+        if cols[1].button("Change Video"):
+            _fs.idx_url_video += 1
+            _fs.current_video_url = urlVideos[_fs.idx_url_video % len(urlVideos)]
+            st.experimental_rerun()
+        st.sidebar.markdown("---")
+
+        del vid_preview, cols  # garbage collection test
+
+        run_selected_module(_fs, vid, "video", ph_variables)
+
+    elif data_source_selection == "WebCam":
+        vid = open_webcam(_fs.webcam_device_id)
+
+        cols = st.sidebar.columns([2, 1])
+        cols[0].markdown(f"**Webcam**: _Device ID = {_fs.webcam_device_id}_")
+        st.sidebar.image(open_img_path_url(demoWebCam, "path"))
+        if cols[1].button(f"Switch Device"):
+            _fs.webcam_device_id = 0 if _fs.webcam_device_id == 1 else 1
+            st.experimental_rerun()
+        st.sidebar.markdown("---")
+
+        del cols  # garbage collection test
+
+        run_selected_module(_fs, vid, "webcam", ph_variables)
+
+    elif data_source_selection == "Video Sources":
+        st.sidebar.image(
+            "https://previews.123rf.com/images/pockygallery/pockygallery1607/pockygallery160700075/63949628-inactive-red-stamp-text-on-white.jpg",
+            caption="Source: https://www.123rf.com/photo_63949628_stock-vector-inactive-red-stamp-text-on-white.html",
+        )
+
+        st.info(
+            f""" 
+        ### {nbsp*20}**VIDEO SOURCES DISABLED ON STREAMLIT SHARE**
+        ---
+        There have been a couple of issues running video sources on the online shared app:
+
+        1. There is a considerable lag when running the Mediapipe modules on videos with one viewer/user. 
+        2.  If multiple viewers/users attempt to use video inputs at the same time, the app becomes totally unresponsive and needs to be rebooted.
+
+        I suspect that both issues are related but I have been unable to get them fixed. Kindly reach out on [GitHub](https://github.com/Outsiders17711) or [Streamlit](https://discuss.streamlit.io/t/streamlit-app-crashes-unexpectedly/15994) if you have any ideas/suggestions on how I can go about resolving these issues.
+        
+        ---
+
+        **If you want to test out video sources, you can clone the [source repository](https://github.com/Outsiders17711/streamlit-Mediapipe-WebApp), install the requirements and run `streamlitMediapipe.py`.**
+
+        ---
+
+        Thanks.
+
+        """
+        )
+
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
+gc.collect()
