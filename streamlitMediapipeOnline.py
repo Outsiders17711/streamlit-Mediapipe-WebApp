@@ -60,8 +60,6 @@ def reload():
 
 
 # [start] [setup main page and side bar] ____________________________
-st.set_page_config(page_title="Streamlit Mediapipe WebApp", layout="wide")
-
 st.markdown(
     f"""
     {pageConfig}
