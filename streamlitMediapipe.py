@@ -60,6 +60,8 @@ def reload():
 
 
 # [start] [setup main page and side bar] ____________________________
+st.set_page_config(page_title="Streamlit Mediapipe WebApp", layout="wide")
+
 st.markdown(
     f"""
     {pageConfig}
@@ -67,7 +69,7 @@ st.markdown(
     <h1 style="font-variant: small-caps; font-size: xx-large; margin-bottom:-45px;" >
     <font color=#ea0525>w e b {nbsp*2} a p p</font>
     </h1>
-    <h1> ADVANCED COMPUTER VISION WITH PYTHON </h1>
+    <h1> STREAMLIT MEDIAPIPE WEBAPP </h1>
     <hr>
     </div>
     """,
@@ -91,7 +93,6 @@ st.sidebar.markdown(
 
 
 # [start] [setup app pages, modules & data sources]__________________
-
 pages_reload = st.sidebar.columns([9, 4])
 st.sidebar.markdown("")
 pages_reload[1].markdown("<br>", unsafe_allow_html=True)
