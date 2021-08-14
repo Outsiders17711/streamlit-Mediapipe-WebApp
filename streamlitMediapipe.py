@@ -38,6 +38,8 @@ def _webappState() -> webappState:
     # return webappState()
 
 
+st.sidebar.write(ReportThread.get_report_ctx().session_id)
+
 webapp = _webappState()
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
 
