@@ -173,12 +173,15 @@ def run_selected_module(_fs, media, type, ph_variables):
     moduleOutput1 = st.empty()
     moduleOutput2 = st.empty()
 
-    _fs.sol_confidence = ph_variables[0].slider(
+    new_value = ph_variables[0].slider(
         "Solution Confidence [0.4-1.0]",
         min_value=0.4,
         max_value=1.0,
         value=_fs.sol_confidence,
     )
+    if new_value != _fs.sol_confidence:
+        _fs.sol_confidence = new_value
+        st.experimental_rerun()
 
     module_selection = _fs.current_module
     if module_selection == "Hand Tracking":
@@ -267,9 +270,6 @@ def run_selected_module(_fs, media, type, ph_variables):
 
     # garbage collection
     del (
-        media,
-        type,
-        ph_variables,
         moreInfo1,
         moreInfo2,
         moduleOutput1,
@@ -452,6 +452,8 @@ def read_source_media(_fs, ph_variables):
 
         """
         )
+
+    return _fs
 
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]

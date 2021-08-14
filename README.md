@@ -21,11 +21,24 @@ Do check out their channels and websites for more informative and exciting Machi
 
 ## Demo
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io/outsiders17711/streamlit-mediapipe-webapp/main/streamlitMediapipe.py)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io/outsiders17711/streamlit-mediapipe-webapp/main/streamlitMediapipeOnline.py)
 
 
-The app was been deployed on Streamlit. You can check it out **[here](https://share.streamlit.io/outsiders17711/streamlit-mediapipe-webapp/main/streamlitMediapipe.py)**.
+The app was been deployed on Streamlit. You can check it out **[here](https://share.streamlit.io/outsiders17711/streamlit-mediapipe-webapp/main/streamlitMediapipeOnline.py)**.
 
 ![Short Demo](https://github.com/Outsiders17711/streamlit-Mediapipe-WebApp/blob/main/demo/streamlitMediapipe.gif?raw=true)
+
+### Note: Video Sources Disabled On Streamlit Share
+
+There have been a couple of issues running video sources on the online shared app:
+
+1. There is a considerable lag when running the Mediapipe modules on videos with one viewer/user. 
+2.  If multiple viewers/users attempt to use video inputs at the same time, the app becomes totally unresponsive and needs to be rebooted.
+
+I suspect that both issues are related but I have been unable to get them fixed. Kindly reach out if you have any ideas/suggestions on how I can go about resolving these issues.
+
+
+**If you want to test out video sources, you can clone the [source repository](https://github.com/Outsiders17711/streamlit-Mediapipe-WebApp), install the requirements and run `streamlitMediapipe.py`.**
+
 
 <hr>
