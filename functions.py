@@ -121,7 +121,6 @@ def open_webcam(device_id):
 
 
 def init_module(media, type, detector, placeholders):
-    frame_count = 0
     cols = placeholders[0].columns([2, 2, 1, 1])
 
     if type == "image":
@@ -131,40 +130,69 @@ def init_module(media, type, detector, placeholders):
         del img  # garbage collection
 
     if type in ["video", "webcam"]:
-        stop_clicked = cols[0].button("🟥 STOP")
-        start_clicked = cols[3].button("🟢 START")
+        stop_clicked = cols[3].button("🟥 STOP")
+        start_clicked = cols[0].button("🟢 START")
 
-        while media.isOpened():
-            try:
-                success, img = media.read()
-                frame_count += 1
+        frame_count, out_vid_frame_count = 0, 0
+        vid_w = int(media.get(cv.CAP_PROP_FRAME_WIDTH))
+        vid_h = int(media.get(cv.CAP_PROP_FRAME_HEIGHT))
+        vid_fps = int(media.get(cv.CAP_PROP_FPS))
+        max_frames = 15 * vid_fps
 
-                if type == "webcam":
-                    img = cv.flip(img, 1)
+        out_vid_file = "output0.mp4"
+        codec = cv.VideoWriter_fourcc(*"avc1")  # *"mp4v" doesn't play with streamlit
+        out_vid = cv.VideoWriter(out_vid_file, codec, vid_fps, (vid_w, vid_h))
 
-                if frame_count == media.get(cv.CAP_PROP_FRAME_COUNT):
-                    frame_count = 0
-                    media.set(cv.CAP_PROP_POS_FRAMES, 0)
+        placeholders[1].info(
+            "Click **START** to process video input. Output video length is capped at 15 seconds. You can use the **STOP** button to cancel processing."
+        )
+        if start_clicked:
+            placeholders[1].info("Processing video input...")
+            progress_bar = st.progress(0)
 
-                img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
-                img = detector.findFeatures(img)
+            while media.isOpened():
+                try:
+                    success, img = media.read()
+                    frame_count += 1
+                    out_vid_frame_count += 1
+                    progress_bar.progress(int((out_vid_frame_count / max_frames) * 100))
 
-                placeholders[1].image(img, use_column_width=True)
+                    if type == "webcam":
+                        img = cv.flip(img, 1)
 
-                del img  # garbage collection
+                    if frame_count == media.get(cv.CAP_PROP_FRAME_COUNT):
+                        frame_count = 0
+                        media.set(cv.CAP_PROP_POS_FRAMES, 0)
 
-                if stop_clicked:
-                    placeholders[1].empty()
+                    img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
+                    img = detector.findFeatures(img)
+
+                    # placeholders[1].image(img, use_column_width=True)
+                    out_vid.write(cv.cvtColor(img, cv.COLOR_RGB2BGR))
+
+                    del img  # garbage collection
+
+                    if stop_clicked or out_vid_frame_count == max_frames:
+                        placeholders[1].empty()
+                        media.release()
+                        out_vid.release()
+                        st.success(
+                            f"**Input video processed successfully. Use the player controls below to play and download the processed video.!**"
+                        )
+                        break
+
+                except Exception:
+                    placeholders[1].info(traceback.format_exc())
                     media.release()
+                    out_vid.release()
+                    os.remove(out_vid_file)  # garbage collection
                     break
 
-                if start_clicked:
-                    st.experimental_rerun()
-
-            except Exception:
-                placeholders[1].info(traceback.format_exc())
-                media.release()
-                break
+            temp_file = tempfile.NamedTemporaryFile(delete=False)
+            with open(out_vid_file, "rb") as rf:
+                temp_file.write(rf.read())
+            os.remove(out_vid_file)  # garbage collection
+            st.video(temp_file.name)
 
 
 def run_selected_module(_fs, media, type, ph_variables):
