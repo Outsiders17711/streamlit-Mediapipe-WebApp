@@ -3,6 +3,7 @@ import random
 import tempfile
 import traceback
 from urllib.request import urlopen
+import shutil
 
 import cv2 as cv
 import numpy as np
@@ -133,17 +134,15 @@ def init_module(media, type, detector, placeholders):
         stop_clicked = cols[3].button("🟥 STOP")
         start_clicked = cols[0].button("🟢 START")
 
-        frame_count, out_vid_frame_count = 0, 0
+        codec = cv.VideoWriter_fourcc(*"avc1")  # *"mp4v" doesn't play with streamlit
         vid_w = int(media.get(cv.CAP_PROP_FRAME_WIDTH))
         vid_h = int(media.get(cv.CAP_PROP_FRAME_HEIGHT))
         vid_fps = int(media.get(cv.CAP_PROP_FPS))
-        max_frames = 15 * vid_fps
+        max_frames = 5 * vid_fps
+        frame_count, out_vid_frame_count = 0, 0
 
-        # temp_dir = tempfile.TemporaryDirectory(suffix=None, prefix="hlu", dir=None)
-        temp_dir = tempfile.gettempdir()
-        out_vid_file = os.path.join(temp_dir, "output0.mp4")
-        st.write(out_vid_file)
-        codec = cv.VideoWriter_fourcc(*"avc1")  # *"mp4v" doesn't play with streamlit
+        temp_dir = tempfile.mkdtemp(suffix=None, prefix="SMW_", dir=None)
+        out_vid_file = os.path.join(temp_dir, "vid_output.mp4")
         out_vid = cv.VideoWriter(out_vid_file, codec, vid_fps, (vid_w, vid_h))
 
         placeholders[1].info(
@@ -188,15 +187,11 @@ def init_module(media, type, detector, placeholders):
                     placeholders[1].info(traceback.format_exc())
                     media.release()
                     out_vid.release()
-                    # os.remove(out_vid_file)  # garbage collection
+                    shutil.rmtree(temp_dir, ignore_errors=True)  # garbage collection
                     break
 
-            # temp_file = tempfile.NamedTemporaryFile(delete=False)
-            # with open(out_vid_file, "rb") as rf:
-            #     temp_file.write(rf.read())
-            # os.remove(out_vid_file)  # garbage collection
-            # st.video(temp_file.name)
             st.video(out_vid_file)
+            shutil.rmtree(temp_dir, ignore_errors=True)  # garbage collection
 
 
 def run_selected_module(_fs, media, type, ph_variables):
@@ -382,6 +377,7 @@ def read_source_media(_fs, ph_variables):
 
     elif data_source_selection == "User Video":
         temp_file = tempfile.NamedTemporaryFile(delete=False)
+        st.write(temp_file.name)
         vid_file_buffer = st.sidebar.file_uploader(
             "Upload Video",
             type=["mp4", "mov", "avi", "3gp", "m4v"],
