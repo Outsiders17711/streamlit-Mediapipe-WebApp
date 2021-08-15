@@ -146,9 +146,7 @@ def init_module(media, type, detector, placeholders):
             os.mkdir(temp_dir)
         out_vid_file = os.path.join(temp_dir, "vid_output.mp4")
         out_vid = cv.VideoWriter(out_vid_file, codec, vid_fps, (vid_w, vid_h))
-        #
-        st.write(os.path.lexists(temp_dir), os.path.lexists(out_vid_file))
-        st.write(temp_dir, out_vid_file, os.path.dirname(__file__))
+        # st.write(temp_dir, out_vid_file)
 
         placeholders[1].info(
             "Click **START** to process video input. Output video length is capped at 15 seconds. You can use the **STOP** button to cancel processing."
@@ -192,11 +190,11 @@ def init_module(media, type, detector, placeholders):
                     placeholders[1].info(traceback.format_exc())
                     media.release()
                     out_vid.release()
-                    # shutil.rmtree(temp_dir, ignore_errors=True)  # garbage collection
+                    shutil.rmtree(temp_dir, ignore_errors=True)  # garbage collection
                     break
 
             st.video(out_vid_file)
-            # shutil.rmtree(temp_dir, ignore_errors=True)  # garbage collection
+            shutil.rmtree(temp_dir, ignore_errors=True)  # garbage collection
 
 
 def run_selected_module(_fs, media, type, ph_variables):
