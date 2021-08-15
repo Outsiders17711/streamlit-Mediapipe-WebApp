@@ -139,9 +139,10 @@ def init_module(media, type, detector, placeholders):
         vid_fps = int(media.get(cv.CAP_PROP_FPS))
         max_frames = 15 * vid_fps
 
-        temp_dir = tempfile.TemporaryDirectory(suffix=None, prefix="hlu", dir=None)
-        out_vid_file = os.path.join(temp_dir.name, "output0.mp4")
-        # st.write(out_vid_file)
+        # temp_dir = tempfile.TemporaryDirectory(suffix=None, prefix="hlu", dir=None)
+        temp_dir = tempfile.gettempdir()
+        out_vid_file = os.path.join(temp_dir, "output0.mp4")
+        st.write(out_vid_file)
         codec = cv.VideoWriter_fourcc(*"avc1")  # *"mp4v" doesn't play with streamlit
         out_vid = cv.VideoWriter(out_vid_file, codec, vid_fps, (vid_w, vid_h))
 
