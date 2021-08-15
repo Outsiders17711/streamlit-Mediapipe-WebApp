@@ -146,7 +146,7 @@ def init_module(media, type, detector, placeholders):
         out_vid = cv.VideoWriter(out_vid_file, codec, vid_fps, (vid_w, vid_h))
         #
         st.write(os.path.lexists(temp_dir), os.path.lexists(out_vid_file))
-        st.write(temp_dir, out_vid_file)
+        st.write(temp_dir, out_vid_file, os.path.dirname(__file__))
 
         placeholders[1].info(
             "Click **START** to process video input. Output video length is capped at 15 seconds. You can use the **STOP** button to cancel processing."
@@ -184,10 +184,6 @@ def init_module(media, type, detector, placeholders):
                         st.success(
                             f"**Input video processed successfully! Use the player controls below to play and download the processed video!**"
                         )
-                        #
-                        st.write(os.path.lexists(temp_dir), os.path.lexists(out_vid_file))
-                        st.write(temp_dir, out_vid_file)
-
                         break
 
                 except Exception:
@@ -198,10 +194,6 @@ def init_module(media, type, detector, placeholders):
                     break
 
             st.video(out_vid_file)
-            #
-            st.write(os.path.lexists(temp_dir), os.path.lexists(out_vid_file))
-            st.write(temp_dir, out_vid_file)
-
             # shutil.rmtree(temp_dir, ignore_errors=True)  # garbage collection
 
 
