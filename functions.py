@@ -139,7 +139,9 @@ def init_module(media, type, detector, placeholders):
         vid_fps = int(media.get(cv.CAP_PROP_FPS))
         max_frames = 15 * vid_fps
 
-        out_vid_file = "output0.mp4"
+        temp_dir = tempfile.TemporaryDirectory(suffix=None, prefix="hlu", dir=None)
+        out_vid_file = os.path.join(temp_dir.name, "output0.mp4")
+        # st.write(out_vid_file)
         codec = cv.VideoWriter_fourcc(*"avc1")  # *"mp4v" doesn't play with streamlit
         out_vid = cv.VideoWriter(out_vid_file, codec, vid_fps, (vid_w, vid_h))
 
@@ -177,7 +179,7 @@ def init_module(media, type, detector, placeholders):
                         media.release()
                         out_vid.release()
                         st.success(
-                            f"**Input video processed successfully. Use the player controls below to play and download the processed video.!**"
+                            f"**Input video processed successfully! Use the player controls below to play and download the processed video!**"
                         )
                         break
 
@@ -185,14 +187,15 @@ def init_module(media, type, detector, placeholders):
                     placeholders[1].info(traceback.format_exc())
                     media.release()
                     out_vid.release()
-                    os.remove(out_vid_file)  # garbage collection
+                    # os.remove(out_vid_file)  # garbage collection
                     break
 
-            temp_file = tempfile.NamedTemporaryFile(delete=False)
-            with open(out_vid_file, "rb") as rf:
-                temp_file.write(rf.read())
-            os.remove(out_vid_file)  # garbage collection
-            st.video(temp_file.name)
+            # temp_file = tempfile.NamedTemporaryFile(delete=False)
+            # with open(out_vid_file, "rb") as rf:
+            #     temp_file.write(rf.read())
+            # os.remove(out_vid_file)  # garbage collection
+            # st.video(temp_file.name)
+            st.video(out_vid_file)
 
 
 def run_selected_module(_fs, media, type, ph_variables):
