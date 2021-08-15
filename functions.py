@@ -141,7 +141,9 @@ def init_module(media, type, detector, placeholders):
         max_frames = 5 * vid_fps
         frame_count, out_vid_frame_count = 0, 0
 
-        temp_dir = tempfile.mkdtemp(suffix=None, prefix="SMW_", dir=None)
+        temp_dir = os.path.join(os.path.dirname(__file__), "output_vid")
+        if not os.path.lexists(temp_dir):
+            os.mkdir(temp_dir)
         out_vid_file = os.path.join(temp_dir, "vid_output.mp4")
         out_vid = cv.VideoWriter(out_vid_file, codec, vid_fps, (vid_w, vid_h))
         #
