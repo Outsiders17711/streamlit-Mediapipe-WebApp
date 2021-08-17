@@ -41,25 +41,25 @@ def reload():
     caching.clear_cache()
     gc.collect()  # garbage collection
     # webapp
-    webapp.idx_current_page = 1
-    webapp.idx_current_module = 2
-    webapp.idx_data_source = 1
-    # functions
-    webapp.current_image_path = ""
-    webapp.current_image_url = ""
-    webapp.idx_url_image = 0
-    webapp.current_video_path = ""
-    webapp.current_video_url = ""
-    webapp.idx_url_video = 0
-    webapp.sol_confidence = 0.65
-    webapp.num_hands = 2
-    webapp.smooth_lms = 1
-    webapp.face_model = 0
-    webapp.num_faces = 2
-    webapp.current_image_upload = ""
-    webapp.current_video_upload = ""
-    webapp.uploader_key = 0
-    webapp.webcam_device_id = 0
+    # webapp.idx_current_page = 1
+    # webapp.idx_current_module = 2
+    # webapp.idx_data_source = 1
+    # # functions
+    # webapp.current_image_path = ""
+    # webapp.current_image_url = ""
+    # webapp.idx_url_image = 0
+    # webapp.current_video_path = ""
+    # webapp.current_video_url = ""
+    # webapp.idx_url_video = 0
+    # webapp.sol_confidence = 0.65
+    # webapp.num_hands = 2
+    # webapp.smooth_lms = 1
+    # webapp.face_model = 0
+    # webapp.num_faces = 2
+    # webapp.current_image_upload = ""
+    # webapp.current_video_upload = ""
+    # webapp.uploader_key = 0
+    # webapp.webcam_device_id = 0
     #
     st.experimental_rerun()
 
