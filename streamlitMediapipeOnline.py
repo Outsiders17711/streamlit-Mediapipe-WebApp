@@ -16,7 +16,7 @@ gc.enable()  # garbage collection
 webapp = getSessionState(
     # webapp
     idx_current_page=0,
-    idx_current_module=2,
+    idx_current_module=0,
     idx_data_source=2,
     # functions
     current_image_path="",
@@ -42,7 +42,7 @@ def reload():
     gc.collect()  # garbage collection
     webapp
     webapp.idx_current_page = 0
-    webapp.idx_current_module = 2
+    webapp.idx_current_module = 0
     webapp.idx_data_source = 2
     # functions
     webapp.current_image_path = ""
