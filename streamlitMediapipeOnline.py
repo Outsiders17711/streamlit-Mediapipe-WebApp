@@ -104,7 +104,7 @@ st.sidebar.markdown(
     <font color=#ea0525>s i d e {nbsp} b a r</font>
     </h3>
     <code style="font-size:small; ">{ReportThread.get_report_ctx().session_id}</code>
-    <code style="font-size:small; ">{gc.get_count()}</code>
+    <br><code style="font-size:small; ">{gc.get_count()}</code>
     </div>
     """,
     unsafe_allow_html=True,
