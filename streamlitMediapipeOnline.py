@@ -17,8 +17,8 @@ webapp = getSessionState(
     idx_current_page=1,
     current_page="About Web App",
     page_selector_key=0,
-    idx_current_module=2,
-    current_module="Face Detection",
+    idx_current_module=0,
+    current_module="Hand Tracking",
     module_selector_key=0,
     idx_data_source=1,
     data_source="Random Image",
@@ -45,33 +45,6 @@ webapp = getSessionState(
 def reload():
     caching.clear_cache()
     gc.collect()  # garbage collection
-    #
-    webapp.idx_current_page = 1
-    webapp.current_page = "About Web App"
-    webapp.page_selector_key = 0
-    webapp.idx_current_module = 2
-    webapp.current_module = "Face Detection"
-    webapp.module_selector_key = 0
-    webapp.idx_data_source = 1
-    webapp.data_source = "Random Image"
-    webapp.source_selector_key = 0
-    #
-    webapp.current_image_path = ""
-    webapp.current_image_url = ""
-    webapp.idx_url_image = 0
-    webapp.current_video_path = ""
-    webapp.current_video_url = ""
-    webapp.idx_url_video = 0
-    webapp.sol_confidence = 0.65
-    webapp.num_hands = 2
-    webapp.smooth_lms = 1
-    webapp.face_model = 0
-    webapp.num_faces = 2
-    webapp.current_image_upload = ""
-    webapp.current_video_upload = ""
-    webapp.uploader_key += 1
-    webapp.webcam_device_id = 0
-    #
     st.experimental_rerun()
 
 
@@ -102,11 +75,11 @@ st.sidebar.markdown(
     <font color=#ea0525>s i d e {nbsp} b a r</font>
     </h3>
     <code>Session ID: {ReportThread.get_report_ctx().session_id}</code>
+    <code>garbage history count: {gc.get_count()}</code>
     </div>
     """,
     unsafe_allow_html=True,
 )
-# <code>garbage history count: {gc.get_count()}</code>
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
 
@@ -115,9 +88,7 @@ st.sidebar.markdown(
 pages_reload = st.sidebar.columns([9, 4])
 st.sidebar.markdown("")
 pages_reload[1].markdown("<br>", unsafe_allow_html=True)
-
-reload_redirect = pages_reload[1].empty()
-if reload_redirect.button("Refresh App 🔃", help="Click to clear cache and reload app."):
+if pages_reload[1].button("Reload App 🔃", help="Click to clear cache and reload page."):
     reload()
 
 
@@ -140,11 +111,6 @@ if webapp.current_page == "About Me":
 
 
 elif webapp.current_page == "About Web App":
-    if reload_redirect.button(f"➕Explore➕ ➖ App ➖ "):
-        webapp.idx_current_page = 0
-        webapp.current_page = "Mediapipe Modules"
-        st.experimental_rerun()
-
     st.markdown(aboutWebApp()[0], unsafe_allow_html=True)
 
     st.sidebar.image(open_img_path_url("mediapipe.jpg", "path"), use_column_width="auto")
