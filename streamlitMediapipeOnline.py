@@ -200,3 +200,4 @@ elif webapp.idx_current_page == appPages.index("Mediapipe Modules"):
     read_source_media(webapp, appSources, ph_variables)
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
+gc.collect()
