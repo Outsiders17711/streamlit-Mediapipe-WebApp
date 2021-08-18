@@ -4,11 +4,11 @@ import streamlit as st
 pageConfig = """
         <style>
         [data-testid="stSidebar"][aria-expanded="true"] > div:first-child{
-            width: 500px;
+            width: 400px;
         }
         [data-testid="stSidebar"][aria-expanded="false"] > div:first-child{
-            width: 500px;
-            margin-left: -500px;
+            width: 400px;
+            margin-left: -400px;
         }
         </style>
         """
@@ -18,7 +18,7 @@ nbsp = "&nbsp"
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
 
 
-@st.cache()
+@st.cache(allow_output_mutation=True, max_entries=3, ttl=3600)
 def aboutMe():
     return """
         ## **Hi 👋 I'm Umar...**
@@ -53,7 +53,7 @@ def aboutMe():
         """
 
 
-@st.cache()
+@st.cache(allow_output_mutation=True, max_entries=3, ttl=3600)
 def aboutWebApp():
     return (
         """
@@ -81,7 +81,7 @@ def aboutWebApp():
     )
 
 
-@st.cache()
+@st.cache(allow_output_mutation=True, max_entries=3, ttl=3600)
 def aboutMpHands():
     return """
     <style>
@@ -121,7 +121,7 @@ def aboutMpHands():
     """
 
 
-@st.cache()
+@st.cache(allow_output_mutation=True, max_entries=3, ttl=3600)
 def aboutMpPose():
     return """
     <style>
@@ -161,7 +161,7 @@ def aboutMpPose():
     """
 
 
-@st.cache()
+@st.cache(allow_output_mutation=True, max_entries=3, ttl=3600)
 def aboutMpFaceDetection():
     return """
     <style>
@@ -194,7 +194,7 @@ def aboutMpFaceDetection():
     """
 
 
-@st.cache()
+@st.cache(allow_output_mutation=True, max_entries=3, ttl=3600)
 def aboutMpFaceMesh():
     return """
     <style>
