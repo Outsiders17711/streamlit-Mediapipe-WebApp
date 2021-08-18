@@ -3,7 +3,6 @@ import random
 import tempfile
 import traceback
 from urllib.request import urlopen
-import shutil
 
 import cv2 as cv
 import numpy as np
@@ -26,7 +25,6 @@ demoVideos = ["pexels03.mp4", "pexels04.mp4", "pexels05.mp4", "pexels08.mp4"]
 demoWebCam = "webcam_image.png"
 # online
 urlImages = [
-    "https://res.cloudinary.com/twenty20/private_images/t_standard-fit/v1623132298/photosp/fafc9d9c-f2dc-46f5-9fa4-885914b176b0/fafc9d9c-f2dc-46f5-9fa4-885914b176b0.jpg",
     "https://res.cloudinary.com/twenty20/private_images/t_standard-fit/v1521838655/photosp/0a0f136f-9032-4480-a1ca-1185dd161368/0a0f136f-9032-4480-a1ca-1185dd161368.jpg",
     "https://res.cloudinary.com/twenty20/private_images/t_standard-fit/v1521838912/photosp/57ece171-00ea-439c-95e2-01523fd41285/57ece171-00ea-439c-95e2-01523fd41285.jpg",
     "https://res.cloudinary.com/twenty20/private_images/t_standard-fit/v1521838985/photosp/fc11c636-e5db-4b02-b3d2-99650128c351/fc11c636-e5db-4b02-b3d2-99650128c351.jpg",
@@ -38,6 +36,7 @@ urlImages = [
     "https://res.cloudinary.com/twenty20/private_images/t_standard-fit/v1521838947/photosp/705bc78c-6e43-47c1-8295-802b48106695/705bc78c-6e43-47c1-8295-802b48106695.jpg",
     "https://res.cloudinary.com/twenty20/private_images/t_standard-fit/v1588713965/photosp/4c7d6a68-a215-47bd-a1a6-7fb137cdf6c4/4c7d6a68-a215-47bd-a1a6-7fb137cdf6c4.jpg",
     "https://res.cloudinary.com/twenty20/private_images/t_standard-fit/v1611254271/photosp/c67f2181-50a6-4b4d-9099-d401197a99a2/c67f2181-50a6-4b4d-9099-d401197a99a2.jpg",
+    "https://res.cloudinary.com/twenty20/private_images/t_standard-fit/v1623132298/photosp/fafc9d9c-f2dc-46f5-9fa4-885914b176b0/fafc9d9c-f2dc-46f5-9fa4-885914b176b0.jpg",
     "https://res.cloudinary.com/twenty20/private_images/t_standard-fit/v1521838971/photosp/a62f2758-ca17-424f-b406-d646162202d7/a62f2758-ca17-424f-b406-d646162202d7.jpg",
 ]
 urlVideos = [
@@ -58,9 +57,6 @@ urlVideos = [
 ]
 # global parameters
 target_h, target_w = 350, 550
-# webapp
-appPages = ["Home Page", "Mediapipe Modules", "About Me"]
-appModules = ["Hand Tracking", "Pose Estimation", "Face Detection", "Face Mesh"]
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
 
@@ -125,80 +121,50 @@ def open_webcam(device_id):
 
 
 def init_module(media, type, detector, placeholders):
+    frame_count = 0
     cols = placeholders[0].columns([2, 2, 1, 1])
 
     if type == "image":
         img = detector.findFeatures(media)
-        placeholders[1].columns([2, 10, 2])[1].image(img, use_column_width=True)
+        placeholders[1].image(img, use_column_width=True)
 
         del img  # garbage collection
 
     if type in ["video", "webcam"]:
-        stop_clicked = cols[3].button("🟥 STOP")
-        start_clicked = cols[0].button("🟢 START")
+        stop_clicked = cols[0].button("🟥 STOP")
+        start_clicked = cols[3].button("🟢 START")
 
-        codec = cv.VideoWriter_fourcc(*"avc1")  # *"mp4v" doesn't play with streamlit
-        vid_w = int(media.get(cv.CAP_PROP_FRAME_WIDTH))
-        vid_h = int(media.get(cv.CAP_PROP_FRAME_HEIGHT))
-        vid_fps = int(media.get(cv.CAP_PROP_FPS))
-        max_frames = 10 * vid_fps
-        frame_count, out_vid_frame_count = 0, 0
+        while media.isOpened():
+            try:
+                success, img = media.read()
+                frame_count += 1
 
-        temp_dir = os.path.join(os.path.dirname(__file__), "output_vid")
-        if not os.path.lexists(temp_dir):
-            os.mkdir(temp_dir)
-        out_vid_file = os.path.join(temp_dir, "vid_output.mp4")
-        out_vid = cv.VideoWriter(out_vid_file, codec, vid_fps, (vid_w, vid_h))
-        # st.write(temp_dir, out_vid_file)
+                if type == "webcam":
+                    img = cv.flip(img, 1)
 
-        placeholders[1].info(
-            "Click **START** to process video input. Output video length is capped at 15 seconds. You can use the **STOP** button to cancel processing."
-        )
-        if start_clicked:
-            placeholders[1].info("Processing video input...")
-            progress_bar = st.progress(0)
-            vid_player = st.columns([2, 10, 2])
+                if frame_count == media.get(cv.CAP_PROP_FRAME_COUNT):
+                    frame_count = 0
+                    media.set(cv.CAP_PROP_POS_FRAMES, 0)
 
-            while media.isOpened():
-                try:
-                    success, img = media.read()
-                    frame_count += 1
-                    out_vid_frame_count += 1
-                    progress_bar.progress(int((out_vid_frame_count / max_frames) * 100))
+                img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
+                img = detector.findFeatures(img)
 
-                    if type == "webcam":
-                        img = cv.flip(img, 1)
+                placeholders[1].image(img, use_column_width=True)
 
-                    if frame_count == media.get(cv.CAP_PROP_FRAME_COUNT):
-                        frame_count = 0
-                        media.set(cv.CAP_PROP_POS_FRAMES, 0)
+                del img  # garbage collection
 
-                    img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
-                    img = detector.findFeatures(img)
-
-                    # placeholders[1].columns([2, 10, 2])[1].image(img, use_column_width=True)
-                    out_vid.write(cv.cvtColor(img, cv.COLOR_RGB2BGR))
-
-                    del img  # garbage collection
-
-                    if stop_clicked or out_vid_frame_count == max_frames:
-                        placeholders[1].empty()
-                        media.release()
-                        out_vid.release()
-                        st.success(
-                            f"**Input video processed successfully! Use the player controls to play and download the processed video!**"
-                        )
-                        break
-
-                except Exception:
-                    placeholders[1].info(traceback.format_exc())
+                if stop_clicked:
+                    placeholders[1].empty()
                     media.release()
-                    out_vid.release()
-                    shutil.rmtree(temp_dir, ignore_errors=True)  # garbage collection
                     break
 
-            vid_player[1].video(out_vid_file)
-            shutil.rmtree(temp_dir, ignore_errors=True)  # garbage collection
+                if start_clicked:
+                    st.experimental_rerun()
+
+            except Exception:
+                placeholders[1].info(traceback.format_exc())
+                media.release()
+                break
 
 
 def run_selected_module(_fs, media, type, ph_variables):
@@ -217,7 +183,7 @@ def run_selected_module(_fs, media, type, ph_variables):
         _fs.sol_confidence = new_value
         st.experimental_rerun()
 
-    module_selection = appModules[_fs.idx_current_module]
+    module_selection = _fs.current_module
     if module_selection == "Hand Tracking":
         moreInfo1.markdown(
             "*Click below for information on the Mediapipe **Hands** solution...*"
@@ -312,14 +278,14 @@ def run_selected_module(_fs, media, type, ph_variables):
     )
 
 
-def read_source_media(_fs, appSources, ph_variables):
+def read_source_media(_fs, ph_variables):
     if _fs.current_image_path == "":
         _fs.current_image_path = demoImages[0]
         _fs.current_image_url = urlImages[0]
         _fs.current_video_path = demoVideos[0]
         _fs.current_video_url = urlVideos[0]
 
-    data_source_selection = appSources[_fs.idx_data_source]
+    data_source_selection = _fs.data_source
     if data_source_selection == "User Image":
         temp_file = tempfile.NamedTemporaryFile(delete=False)
         img_file_buffer = st.sidebar.file_uploader(
@@ -336,44 +302,47 @@ def read_source_media(_fs, appSources, ph_variables):
             )
 
             st.sidebar.markdown("")
-            cols = st.sidebar.columns([3, 2])
+            cols = st.sidebar.columns([2, 1])
             cols[0].text("Original Image")
             st.sidebar.image(mask, use_column_width=True)
             if cols[1].button("Clear Upload"):
                 _fs.current_image_upload = ""
                 _fs.uploader_key += 1
                 st.experimental_rerun()
+            st.sidebar.markdown("---")
 
             del temp_file, img_file_buffer, mask, cols  # garbage collection
 
             run_selected_module(_fs, img, "image", ph_variables)
 
-    elif data_source_selection == "Local Image":
+    elif data_source_selection == "Random Local Image":
         img = open_img_path_url(_fs.current_image_path, "path")
 
         st.sidebar.markdown("")
-        cols = st.sidebar.columns([3, 2])
+        cols = st.sidebar.columns([2, 1])
         cols[0].text("Original Image")
         st.sidebar.image(img, use_column_width=True)
         if cols[1].button("Change Image"):
             _fs.current_image_path = random.choice(demoImages)
             st.experimental_rerun()
+        st.sidebar.markdown("---")
 
         del cols  # garbage collection
 
         run_selected_module(_fs, img, "image", ph_variables)
 
-    elif data_source_selection == "Online Image":
+    elif data_source_selection == "Random Online Image":
         img = open_img_path_url(_fs.current_image_url, "url")
 
         st.sidebar.markdown("")
-        cols = st.sidebar.columns([3, 2])
+        cols = st.sidebar.columns([2, 1])
         cols[0].text("Original Image")
         st.sidebar.image(img, use_column_width=True)
         if cols[1].button("Change Image"):
             _fs.idx_url_image += 1
             _fs.current_image_url = urlImages[_fs.idx_url_image % len(urlImages)]
             st.experimental_rerun()
+        st.sidebar.markdown("---")
 
         del cols  # garbage collection
 
@@ -395,44 +364,47 @@ def read_source_media(_fs, appSources, ph_variables):
             vid = open_vid_path_url(_fs.current_video_upload, "path")
 
             st.sidebar.markdown("")
-            cols = st.sidebar.columns([3, 2])
+            cols = st.sidebar.columns([2, 1])
             cols[0].text("Original Video")
             st.sidebar.video(_fs.current_video_upload)
             if cols[1].button("Clear Upload"):
                 _fs.current_video_upload = ""
                 _fs.uploader_key += 1
                 st.experimental_rerun()
+            st.sidebar.markdown("---")
 
             del temp_file, vid_file_buffer, cols  # garbage collection
 
             run_selected_module(_fs, vid, "video", ph_variables)
 
-    elif data_source_selection == "Local Video":
+    elif data_source_selection == "Random Local Video":
         vid, vid_preview = open_vid_path_url(_fs.current_video_path, "path", preview=True)
 
         st.sidebar.markdown("")
-        cols = st.sidebar.columns([3, 2])
+        cols = st.sidebar.columns([2, 1])
         cols[0].text("Original Video")
         st.sidebar.video(vid_preview)
         if cols[1].button("Change Video"):
             _fs.current_video_path = random.choice(demoVideos)
             st.experimental_rerun()
+        st.sidebar.markdown("---")
 
         del vid_preview, cols  # garbage collection
 
         run_selected_module(_fs, vid, "video", ph_variables)
 
-    elif data_source_selection == "Online Video":
+    elif data_source_selection == "Random Online Video":
         vid, vid_preview = open_vid_path_url(_fs.current_video_url, "url", preview=True)
 
         st.sidebar.markdown("")
-        cols = st.sidebar.columns([3, 2])
+        cols = st.sidebar.columns([2, 1])
         cols[0].text("Original Video")
         st.sidebar.video(vid_preview)
         if cols[1].button("Change Video"):
             _fs.idx_url_video += 1
             _fs.current_video_url = urlVideos[_fs.idx_url_video % len(urlVideos)]
             st.experimental_rerun()
+        st.sidebar.markdown("---")
 
         del vid_preview, cols  # garbage collection
 
@@ -441,12 +413,13 @@ def read_source_media(_fs, appSources, ph_variables):
     elif data_source_selection == "WebCam":
         vid = open_webcam(_fs.webcam_device_id)
 
-        cols = st.sidebar.columns([3, 2])
+        cols = st.sidebar.columns([2, 1])
         cols[0].markdown(f"**Webcam**: _Device ID = {_fs.webcam_device_id}_")
         st.sidebar.image(open_img_path_url(demoWebCam, "path"))
         if cols[1].button(f"Switch Device"):
             _fs.webcam_device_id = 0 if _fs.webcam_device_id == 1 else 1
             st.experimental_rerun()
+        st.sidebar.markdown("---")
 
         del cols  # garbage collection
 
