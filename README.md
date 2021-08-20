@@ -1,3 +1,9 @@
+<p align="right">
+<img src="https://badges.pufler.dev/visits/Outsiders17711/streamlit-Mediapipe-WebApp?style=for-the-badge&logo=github" alt="https://github.com/Outsiders17711" />&nbsp;
+<img src="https://badges.pufler.dev/updated/Outsiders17711/streamlit-Mediapipe-WebApp?style=for-the-badge&logo=github" alt="https://github.com/Outsiders17711" />&nbsp;
+<img src="https://badges.pufler.dev/created/Outsiders17711/streamlit-Mediapipe-WebApp?style=for-the-badge&logo=github" alt="https://github.com/Outsiders17711" />&nbsp;
+</p>
+
 ## Streamlit Mediapipe WebApp
 
 This application explores the functionality of some of Google's <a href="https://google.github.io/mediapipe/" style="text-decoration: none;">**Mediapipe**</a> Machine Learning solutions, viz:
