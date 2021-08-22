@@ -88,13 +88,17 @@ def open_img_path_url(url_or_file, source_type, source_path=None, resize=False):
         ratio = target_h / img_h
         r_img = cv.resize(img, None, fx=ratio, fy=ratio)
 
-        r_img_w = r_img.shape[1]
-        left_edge = target_w // 2 - r_img_w // 2
+        try:
+            r_img_w = r_img.shape[1]
+            left_edge = target_w // 2 - r_img_w // 2
 
-        mask = np.zeros((target_h, target_w, 3), dtype="uint8")
-        mask[:, left_edge : left_edge + r_img_w] = r_img
+            mask = np.zeros((target_h, target_w, 3), dtype="uint8")
+            mask[:, left_edge : left_edge + r_img_w] = r_img
 
-        return img, mask
+            return img, mask
+
+        except Exception:
+            return img, r_img
 
 
 def open_vid_path_url(url_or_file, source_type, source_path=None, preview=False):
