@@ -15,3 +15,4 @@ streamlitMediapipeWebApp.ipynb
 output*.mp4
 streamlitSharing_ExceedsResourceLimits.py
 streamlitSharing_LooksOkay.py
+.vscode/
