@@ -1,9 +1,12 @@
 import gc  # garbage collection
 
 import streamlit as st
-import streamlit.report_thread as ReportThread
-from streamlit.server.server import Server
-from streamlit import caching
+try:
+    import streamlit.report_thread as ReportThread  #type:ignore
+    from streamlit.server.server import Server  #type:ignore
+    from streamlit import caching
+except:
+    from streamlit.runtime.scriptrunner import get_script_run_ctx
 
 from functions import *
 from appSessionState import getSessionState
@@ -17,7 +20,7 @@ webapp = getSessionState(
     # webapp
     idx_current_page=0,
     idx_current_module=0,
-    idx_data_source=2,
+    idx_data_source=1,
     # functions
     current_image_path="",
     current_image_url="",
@@ -38,7 +41,7 @@ webapp = getSessionState(
 
 
 def reload():
-    caching.clear_cache()
+    # st.caching.clear_cache()
     gc.collect()  # garbage collection
     # # webapp
     # webapp.idx_current_page = 0
@@ -61,7 +64,7 @@ def reload():
     # webapp.uploader_key = 0
     # webapp.webcam_device_id = 0
     # rerun
-    st.experimental_rerun()
+    # st.rerun()
 
 
 appPages = ["Home Page", "Mediapipe Modules", "About Me"]
@@ -81,7 +84,7 @@ appSources = [
 
 # [start] [setup main page and side bar] ____________________________
 st.set_page_config(page_title="Streamlit Mediapipe WebApp", layout="wide")
-st.set_option("deprecation.showfileUploaderEncoding", False)
+# st.set_option("deprecation.showfileUploaderEncoding", False)
 
 st.markdown(
     f"""
@@ -103,7 +106,7 @@ st.sidebar.markdown(
     <h3 style="font-variant: small-caps; font-size: xx-large; ">
     <font color=#ea0525>s i d e {nbsp} b a r</font>
     </h3>
-    <code style="font-size:small; ">{ReportThread.get_report_ctx().session_id}</code>
+    <code style="font-size:small; ">{get_script_run_ctx().session_id}</code>
     <br><code style="font-size:small; ">{gc.get_count()}</code>
     </div>
     """,
@@ -116,32 +119,32 @@ pages = st.sidebar.columns([1, 1, 1])
 
 if pages[1].button("About Me"):
     webapp.idx_current_page = appPages.index("About Me")
-    st.experimental_rerun()
+    # st.rerun()
 
 if pages[2].button("Reload App"):
     reload()
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
 
-if webapp.idx_current_page == appPages.index("About Me"):
-    if pages[0].button("Home Page"):
-        webapp.idx_current_page = appPages.index("Home Page")
-        st.experimental_rerun()
+# if webapp.idx_current_page == appPages.index("About Me"):
+#     if pages[0].button("Home Page"):
+#         webapp.idx_current_page = appPages.index("Home Page")
+#         # st.rerun()
 
-    st.markdown(aboutMe(), unsafe_allow_html=True)
-    st.sidebar.markdown("---")
-    st.sidebar.image(open_img_path_url("highlord.jpg", "path"), use_column_width="auto")
-    st.sidebar.markdown("---")
+#     st.markdown(aboutMe(), unsafe_allow_html=True)
+#     st.sidebar.markdown("---")
+#     st.sidebar.image(open_img_path_url("highlord.jpg", "path"), use_column_width="auto")
+#     st.sidebar.markdown("---")
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
 elif webapp.idx_current_page == appPages.index("Home Page"):
     if pages[0].button("Mediapipe"):
         webapp.idx_current_page = appPages.index("Mediapipe Modules")
-        st.experimental_rerun()
+        # st.rerun()
 
     if st.sidebar.columns([3, 15, 2])[1].button("📌📌 Mediapipe Modules 📌📌"):
         webapp.idx_current_page = appPages.index("Mediapipe Modules")
-        st.experimental_rerun()
+        # st.rerun()
 
     st.markdown(aboutWebApp()[0], unsafe_allow_html=True)
 
@@ -168,10 +171,10 @@ elif webapp.idx_current_page == appPages.index("Home Page"):
 
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
-elif webapp.idx_current_page == appPages.index("Mediapipe Modules"):
+elif webapp.idx_current_page == appPages.index("About Me"):
     if pages[0].button("Home Page"):
         webapp.idx_current_page = appPages.index("Home Page")
-        st.experimental_rerun()
+        # st.rerun()
 
     st.sidebar.write("")
     mp_selectors = st.sidebar.columns([1, 1])
@@ -183,7 +186,7 @@ elif webapp.idx_current_page == appPages.index("Mediapipe Modules"):
     )
     if module_selection != appModules[webapp.idx_current_module]:
         webapp.idx_current_module = appModules.index(module_selection)
-        st.experimental_rerun()
+        # st.rerun()
 
     data_source_selection = mp_selectors[1].selectbox(
         "Data/Media Source:",
@@ -192,7 +195,7 @@ elif webapp.idx_current_page == appPages.index("Mediapipe Modules"):
     )
     if data_source_selection != appSources[webapp.idx_data_source]:
         webapp.idx_data_source = appSources.index(data_source_selection)
-        st.experimental_rerun()
+        # st.rerun()
 
     st.sidebar.write("")
     ph_variables = st.sidebar.columns([1, 1])

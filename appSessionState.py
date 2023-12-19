@@ -22,8 +22,12 @@ result:
 
 """
 
-import streamlit.report_thread as ReportThread
-from streamlit.server.server import Server
+import streamlit as st
+try:
+    import streamlit.report_thread as ReportThread  #type:ignore
+    from streamlit.server.server import Server  #type:ignore
+except:
+    pass
 
 
 class SessionState(object):
@@ -48,7 +52,8 @@ class SessionState(object):
             setattr(self, key, val)
 
 
-def getSessionState(**kwargs):
+def _old_getSessionState(**kwargs):
+    raise DeprecationWarning
     """Gets a SessionState object for the current session.
 
     Creates a new object if necessary.
@@ -89,3 +94,10 @@ def getSessionState(**kwargs):
         this_session._custom_session_state = SessionState(**kwargs)
 
     return this_session._custom_session_state
+
+
+def getSessionState(**kwargs):
+    for key, val in kwargs.items():
+        setattr(st.session_state, key, val)
+
+    return st.session_state

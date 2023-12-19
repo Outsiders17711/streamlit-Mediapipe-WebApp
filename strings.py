@@ -18,7 +18,7 @@ nbsp = "&nbsp"
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
 
 
-@st.cache(allow_output_mutation=True, max_entries=3, ttl=3600)
+@st.cache_data(max_entries=3, ttl=3600)
 def aboutMe():
     return """
         ## **Hi 👋 I'm Umar...**
@@ -53,7 +53,7 @@ def aboutMe():
         """
 
 
-@st.cache(allow_output_mutation=True, max_entries=3, ttl=3600)
+@st.cache_data(max_entries=3, ttl=3600)
 def aboutWebApp():
     return (
         """
@@ -81,7 +81,7 @@ def aboutWebApp():
     )
 
 
-@st.cache(allow_output_mutation=True, max_entries=3, ttl=3600)
+@st.cache_data(max_entries=3, ttl=3600)
 def aboutMpHands():
     return """
     <style>
@@ -121,7 +121,7 @@ def aboutMpHands():
     """
 
 
-@st.cache(allow_output_mutation=True, max_entries=3, ttl=3600)
+@st.cache_data(max_entries=3, ttl=3600)
 def aboutMpPose():
     return """
     <style>
@@ -161,7 +161,7 @@ def aboutMpPose():
     """
 
 
-@st.cache(allow_output_mutation=True, max_entries=3, ttl=3600)
+@st.cache_data(max_entries=3, ttl=3600)
 def aboutMpFaceDetection():
     return """
     <style>
@@ -194,7 +194,7 @@ def aboutMpFaceDetection():
     """
 
 
-@st.cache(allow_output_mutation=True, max_entries=3, ttl=3600)
+@st.cache_data(max_entries=3, ttl=3600)
 def aboutMpFaceMesh():
     return """
     <style>

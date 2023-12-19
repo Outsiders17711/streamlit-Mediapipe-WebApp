@@ -219,7 +219,7 @@ def run_selected_module(_fs, media, type, ph_variables):
     )
     if new_value != _fs.sol_confidence:
         _fs.sol_confidence = new_value
-        st.experimental_rerun()
+        # st.rerun()
 
     module_selection = appModules[_fs.idx_current_module]
     if module_selection == "Hand Tracking":
@@ -231,7 +231,7 @@ def run_selected_module(_fs, media, type, ph_variables):
         )
         if new_value != _fs.num_hands:
             _fs.num_hands = new_value
-            st.experimental_rerun()
+            # st.rerun()
 
         with moreInfo2.expander(""):
             st.markdown(aboutMpHands(), unsafe_allow_html=True)
@@ -252,7 +252,7 @@ def run_selected_module(_fs, media, type, ph_variables):
         )
         if new_value != _fs.smooth_lms:
             _fs.smooth_lms = new_value
-            st.experimental_rerun()
+            # st.rerun()
 
         with moreInfo2.expander(""):
             st.markdown(aboutMpPose(), unsafe_allow_html=True)
@@ -273,7 +273,7 @@ def run_selected_module(_fs, media, type, ph_variables):
         )
         if new_value != _fs.face_model:
             _fs.face_model = new_value
-            st.experimental_rerun()
+            # st.rerun()
 
         with moreInfo2.expander(""):
             st.markdown(aboutMpFaceDetection(), unsafe_allow_html=True)
@@ -294,7 +294,7 @@ def run_selected_module(_fs, media, type, ph_variables):
         )
         if new_value != _fs.num_faces:
             _fs.num_faces = new_value
-            st.experimental_rerun()
+            # st.rerun()
 
         with moreInfo2.expander(""):
             st.markdown(aboutMpFaceMesh(), unsafe_allow_html=True)
@@ -346,7 +346,7 @@ def read_source_media(_fs, appSources, ph_variables):
             if cols[1].button("Clear Upload"):
                 _fs.current_image_upload = ""
                 _fs.uploader_key += 1
-                st.experimental_rerun()
+                # st.rerun()
 
             del temp_file, img_file_buffer, mask, cols  # garbage collection
 
@@ -361,27 +361,27 @@ def read_source_media(_fs, appSources, ph_variables):
         st.sidebar.image(img, use_column_width=True)
         if cols[1].button("Change Image"):
             _fs.current_image_path = random.choice(demoImages)
-            st.experimental_rerun()
+            # st.rerun()
 
         del cols  # garbage collection
 
         run_selected_module(_fs, img, "image", ph_variables)
 
-    elif data_source_selection == "Online Image":
-        img = open_img_path_url(_fs.current_image_url, "url")
+    # elif data_source_selection == "Online Image":
+    #     img = open_img_path_url(_fs.current_image_url, "url")
 
-        st.sidebar.markdown("")
-        cols = st.sidebar.columns([3, 2])
-        cols[0].text("Original Image")
-        st.sidebar.image(img, use_column_width=True)
-        if cols[1].button("Change Image"):
-            _fs.idx_url_image += 1
-            _fs.current_image_url = urlImages[_fs.idx_url_image % len(urlImages)]
-            st.experimental_rerun()
+    #     st.sidebar.markdown("")
+    #     cols = st.sidebar.columns([3, 2])
+    #     cols[0].text("Original Image")
+    #     st.sidebar.image(img, use_column_width=True)
+    #     if cols[1].button("Change Image"):
+    #         _fs.idx_url_image += 1
+    #         _fs.current_image_url = urlImages[_fs.idx_url_image % len(urlImages)]
+    #         # st.rerun()
 
-        del cols  # garbage collection
+    #     del cols  # garbage collection
 
-        run_selected_module(_fs, img, "image", ph_variables)
+    #     run_selected_module(_fs, img, "image", ph_variables)
 
     elif data_source_selection == "User Video":
         temp_file = tempfile.NamedTemporaryFile(delete=False)
@@ -405,7 +405,7 @@ def read_source_media(_fs, appSources, ph_variables):
             if cols[1].button("Clear Upload"):
                 _fs.current_video_upload = ""
                 _fs.uploader_key += 1
-                st.experimental_rerun()
+                # st.rerun()
 
             del temp_file, vid_file_buffer, cols  # garbage collection
 
@@ -420,7 +420,7 @@ def read_source_media(_fs, appSources, ph_variables):
         st.sidebar.video(vid_preview)
         if cols[1].button("Change Video"):
             _fs.current_video_path = random.choice(demoVideos)
-            st.experimental_rerun()
+            # st.rerun()
 
         del vid_preview, cols  # garbage collection
 
@@ -436,7 +436,7 @@ def read_source_media(_fs, appSources, ph_variables):
         if cols[1].button("Change Video"):
             _fs.idx_url_video += 1
             _fs.current_video_url = urlVideos[_fs.idx_url_video % len(urlVideos)]
-            st.experimental_rerun()
+            # st.rerun()
 
         del vid_preview, cols  # garbage collection
 
@@ -450,7 +450,7 @@ def read_source_media(_fs, appSources, ph_variables):
         st.sidebar.image(open_img_path_url(demoWebCam, "path"))
         if cols[1].button(f"Switch Device"):
             _fs.webcam_device_id = 0 if _fs.webcam_device_id == 1 else 1
-            st.experimental_rerun()
+            # st.rerun()
 
         del cols  # garbage collection
 

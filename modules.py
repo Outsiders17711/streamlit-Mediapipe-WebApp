@@ -5,7 +5,7 @@ import streamlit as st
 
 
 # [start]____________________________________________________________
-@st.cache(allow_output_mutation=True, max_entries=10, ttl=3600)
+@st.cache(max_entries=10, ttl=3600)
 def mpSolutions(type):
     if type == "hands":
         return mp.solutions.hands, mp.solutions.drawing_utils
@@ -20,7 +20,7 @@ def mpSolutions(type):
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
 
 # [start]____________________________________________________________
-@st.cache(allow_output_mutation=True, max_entries=10, ttl=3600)
+@st.cache(max_entries=10, ttl=3600)
 class handDetector:
     def __init__(self, imageMode=False, numHands=2, solutionConfidence=0.5):
         self.imageMode = imageMode
@@ -59,7 +59,7 @@ class handDetector:
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
 
 # [start]____________________________________________________________
-@st.cache(allow_output_mutation=True, max_entries=10, ttl=3600)
+@st.cache(max_entries=10, ttl=3600)
 class poseDetector:
     def __init__(self, imageMode=False, smoothLandmarks=True, solutionConfidence=0.5):
         self.imageMode = imageMode
@@ -96,7 +96,7 @@ class poseDetector:
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
 
 # [start]____________________________________________________________
-@st.cache(allow_output_mutation=True, max_entries=10, ttl=3600)
+@st.cache(max_entries=10, ttl=3600)
 class faceDetector:
     def __init__(self, solutionConfidence=0.5, modelSelection=1):
         self.detectionConfidence = solutionConfidence
@@ -165,7 +165,7 @@ class faceDetector:
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[end]
 
 # [start]____________________________________________________________
-@st.cache(allow_output_mutation=True, max_entries=10, ttl=3600)
+@st.cache(max_entries=10, ttl=3600)
 class faceMeshDetector:
     def __init__(self, imageMode=False, numFaces=1, solutionConfidence=0.5):
         self.imageMode = imageMode
